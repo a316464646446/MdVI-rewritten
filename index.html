@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-dimensional Volume Incremental Rewritten</title>
+    <link href="./assets/style/core.css" rel="stylesheet">
+
+    <script src="./assets/script/technical/vue.min.js" defer></script>
+    <script src="./assets/script/technical/ExpantaNum.js" defer></script>
+    <script src="./assets/script/technical/format_expantanum.js" defer></script>
+    <script src="./assets/script/display.js" defer></script>
+    <script src="./assets/script/constants.js" defer></script>
+    <script src="./assets/script/temp.js" defer></script>
+    <script src="./assets/script/script.js" defer></script>
+    <script src="./assets/script/newsticker.js" defer></script>
+    <script src="./assets/script/save.js" defer></script>
+    <script src="./assets/script/components.js" defer></script>
+    <script src="./assets/script/changelog.js" defer></script>
+
+
+</head>
+<body>
+    <div id="app">
+        <div>
+            <newsticker></newsticker>
+            <div class="text-center">
+                你有 <span class="vol-dis">{{formatWhole(player.volumes)}}</span> mm<sup>4</sup> 4维体积
+            </div>
+            <div v-if="isEndgame()" :style="{color: getUndulatingColor()}" class="text-center">已达到当前版本终点！</div>
+        </div>
+        <div class="main-line"></div>
+        <div class="text-center">
+            <button v-for="tab in primaryTabSort()" :class="getTabClass(tab.name)" :style="tab.style" v-html="tab.text + tab.id" :disabled="tabShow.inPrimaryTab(tab.name)" @click="player.currentPage = tab.id">
+            
+            </button> 
+        </div>
+        <div class="main-line"></div>
+        <div class="text-center">
+            <button v-for="tab in secondaryTabSort()" :class="getSubTabClass(tab.parentTab,tab.name)" :style="tab.style" v-html="tab.text + tab.id" :disabled="tabShow.inSecondaryTab(tab.parentTab,tab.name)" @click="player.currentPage = tab.id">
+            
+            </button>
+        </div>
+        <div  v-if="player.currentPage == 1" class="text-center">
+            <button class="btn" 
+            @click="buyall()"
+            @touchstart="isHoldMax = true;" @touchend="isHoldMax = false;"
+            v-on:mousedown="isHoldMax = true;" v-on:mouseup.native="isHoldMax = false;">
+                购买最大
+            </button>
+            <br>
+            <div v-for="dim in dimensions" :key="dim.id" class="text-center">
+                    {{ dim.label }}
+                    +<span>{{
+                        format(player.dimensions[DIMENSIONS_POINTS][dim.id
+                        - 1]) }}
+                    </span>
+                    x<span>{{
+                        format(player.dimensions[DIMENSIONS_MULTI][dim.id
+                        - 1]) }}
+                    </span>
+                    ^<span>{{
+                        format(player.dimensions[DIMENSIONS_EXPONENT][dim.id
+                        - 1]) }}
+                    </span>
+                    <span>{{
+                        format(player.dimensions[DIMENSIONS_BOUGHT][dim.id
+                        - 1]) }}
+                    </span>
+                    <button class="btn" :disabled="!buyable(dim.id)" @click="buydim(dim.id)">价格: {{format(player.dimensions[DIMENSIONS_COST][dim.id - 1 ])}} mm<sup>4</sup></button>
+                    <!-- <button class="btn" :disabled="!buyable(dim.id)" @click="buydim(dim.id)">
+                        Cost: <span v-html="format(player.dimensions[DIMENSIONS_COST][dim.id
+                            - 1])"></span>
+                    </button>
+                    <button class="btn" v-if="hasMM4Upg(5)" @click="toggleAutobuyer(dim.id)">
+                        Auto: {{player.auto.includes(dim.id) ? "ON" :
+                        "OFF"}}
+                    </button> -->
+            </div>
+        </div>
+        
+        <div v-if="player.currentPage == 2" class="text-center">
+            <button class="btn" @click="formattedHardReset">硬重置</button>
+            <button class="btn" @click="exportCopy">导出</button>
+            <button class="btn" @click="exportFile">导出为文件</button>
+            <!-- <button class="btn" @click="importSave">导入</button> -->
+            <button class="btn" @click="importFile">以文件导入</button>
+        </div>
+        <div v-if="player.currentPage == 3" class="text-center">
+            <div>
+                <span v-html="formatEndgame()"></span><br />
+                当前版本： {{changelog[0].version}}<br />
+                使用
+                <a href="https://github.com/Naruyoko/ExpantaNum.js" target="_blank">Naruyoko/ExpantaNum.js</a>
+                <a href="https://github.com/cloudytheconqueror/letter-notation-format"
+                    target="_blank">cloudytheconqueror/letter-notation-format</a>
+                处理大数字<br />
+                
+                <hr>
+                <p>
+                    支持所有序数增量吧吧友，点击下面玩吧友们制作的游戏
+                </p>
+                <a href="https://seanxlx2011.github.io/" target="_blank" class="game-link">
+                    Incremental Data
+                    Rewritten</a>,<br />
+                <a href="https://0i00000000a7.github.io/points-incremental-rewritten/" target="_blank" class="game-link">
+                    Points Incremental Rewritten
+                </a>,<br />
+                <a href="https://aster131072.github.io/incremental_evolution/" target="_blank" class="game-link">Incremental
+                    Evolution</a>,<br />
+                <a href="https://dlsdl.github.io/wind_spirit_creation/" target="_blank" class="game-link">Wind
+                    spirit
+                    creation</a>,<br />
+                <a href="https://qqqe308.github.io/The-Rhythm-Game-Tree/" target="_blank" class="game-link">The Rhythm
+                    Game
+                    Tree
+                    </a>,<br />
+                <a href="https://a262537412640768744.github.io/homework-incremental/main.html" target="_blank" class="game-link">
+                    Homework Incremental </a>,<br />
+                <a href="https://goldenapple125.github.io/RBN/" target="_blank" class="game-link">The Road of
+                    Big Number </a>,<br />
+                <a href="https://qqqe308.github.io/Anti-Anti-Softcap-Tree/111/" target="_blank" class="game-link">
+                    Anti anti softcap tree </a>,<br />
+                <br />
+                <br />
+                <p>你也可以玩其他的增量游戏！</p>
+                <a href="https://ivark.github.io/AntimatterDimensions" target="_blank" class="game-link">Antimatter
+                    Dimensions</a>,<br />
+                <a href="https://seanxlx2011.github.io/" target="_blank" class="game-link">
+                    <del>Infinity Dimension Rewritten</del> </a>,<br />
+                <a href="https://jacorb90.github.io/Prestige-Tree/" target="_blank" class="game-link">
+                    The Prestige Tree </a>,<br />
+                <a href="https://patcailmemer.github.io/Ordinal-Markup" target="_blank" class="game-link tooltipBox">
+                    Ordinal Markup<span class="tooltip">Stop updated on Mar 23, 2021</span> </a><br />
+                    <hr />
+                    <h1>---更新日志---</h1>
+                    <changelog></changelog>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+:root{
+    --color-text-invert: #080808;
+    --color-text: #f8f8f8;
+}
+body{
+    background-color: var(--color-text-invert);
+    color: var(--color-text);
+}
+
+button {
+    border: solid 2px #444;
+    background-color: #1b1b1b;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition-property: background-color, border, transform, box-shadow;
+    transition-duration: 0.15s;
+}
+
+.btn {
+    cursor: pointer;
+    font-size: 12px;
+    max-width: 250px;
+    padding: 7px 25px;
+    text-decoration: none;
+    border: 1px solid #777;
+    background: #333;
+    color: white;
+    display: inline-block;
+}
+.game-link {
+    color: #00FF00;
+}
+.btn:hover {
+    border: 1px solid #999;
+    background: #555;
+}
+.btn:disabled {
+    border-color: #222;
+    background: #171717;
+    color: #777;
+    cursor: not-allowed;
+    display: inline-block;
+}
+.main-line {
+    width: 100%;
+    border-bottom: solid 2px #222;
+    height: 5px;
+    margin-bottom: 13px;
+}
+#news {
+    color: white;
+    width: 90%;
+    top: 0px;
+    height: 20px;
+    border: solid 2px #222;
+    background-color: #171717;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    margin:auto;
+}
+
+#newsText {
+    white-space: nowrap
+}
+
+.vol-dis{
+    font-size: 32px;
+}
