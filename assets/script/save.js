@@ -2,6 +2,16 @@ var blackListProperties = [];
 var hasLoaded = {
     status: false
 }
+function resetDimensions() {
+    player.dimensions = [
+        [E(0), E(0), E(0), E(0), E(0), E(0), E(0), E(0)], //dimensions
+        [E(1), E(1), E(1), E(1), E(1), E(1), E(1), E(1)], //dimensions_multi
+        [E(0), E(0), E(0), E(0), E(0), E(0), E(0), E(0)], // dimensions_bought
+        [E(10), E(100), E(1000), E(1e4), E(1e5), E(1e6), E(1e7), E(1e8)],// dim_cost
+        [E(1), E(1), E(1), E(1), E(1), E(1), E(1), E(1)], //dim_exponent
+        [E(1), E(1), E(1), E(1), E(1), E(1), E(1), E(1)], //dim_doubleexponent
+    ]
+}
 function hardReset() {
     player = {
         version: 1,
@@ -15,7 +25,29 @@ function hardReset() {
         ],
         volumes: E(7),
         currentPage: 1,
-        time: Date.now()
+        time: Date.now(),
+
+        dimBoost: E(0),
+        auto: [],
+
+        offlinedTime: 0,
+        offlinePower: 0,
+        isOffline: false,
+        timeSpeed: 0,
+        optHotkey: true,
+
+        // mm^3
+        isPL1unlocked: false,
+        PL1points: E(0),
+        PL1times: E(0),
+        PL1total: E(0),
+        PL1upgrades: [],
+        automationState: {
+            
+        }
+
+
+
     }
 }
 
@@ -68,6 +100,7 @@ function load(){
         transformToE(loadplayer);
         deepCopyProps(loadplayer, player);
         fixOldSave();
+        player.offlinedTime += (Date.now()-player.time)/1000
     }
     loadVue();
     hasLoaded.status = true;

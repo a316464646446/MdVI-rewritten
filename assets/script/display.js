@@ -47,8 +47,51 @@ var tabShow = {
                 return true;
             },
         },
+        dimboost: {
+            id: 4,
+            text: "维度提升", 
+            unlocked() {
+                return true;
+            }
+        },
+        offline: {
+            id:5,
+            text: "离线时间",
+            unlocked() {
+                return true;
+            }
+        },
         text: "主要",
         firstTabID: 1
+    },
+    automation: {
+        text: "自动",
+        firstTabID: 8,
+        auto: {
+            text: "自动",
+            id: 8
+        },
+        unlocked(){
+            return hasMM3Upg(2)
+        }
+    },
+    mm3: {
+        text: "3维体积",
+        firstTabID : 6,
+        upgrades: {
+            id: 6,
+            class: "mm3btn",
+            text: "升级"
+        },
+        challenges: {
+            id: 7,
+            class: "mm3btn",
+            text: "挑战"
+        },
+        class: "mm3btn",
+        unlocked() {
+            return player.isPL1unlocked;
+        }
     },
     settings: {
         text: "选项",
@@ -94,7 +137,7 @@ function secondaryTabSort() {
     for (const key in tabShow){
         if (tabShow.inPrimaryTab(key)){
             for (const subtabKey in tabShow[key]){
-                if (subtabKey === "firstTabID" || subtabKey === "text" || subtabKey==="unlocked"){continue;}else{
+                if (subtabKey === "firstTabID" || subtabKey === "text" || subtabKey==="unlocked" || subtabKey === "class"){continue;}else{
                     let showThisSubTab = true;
                     if (tabShow[key][subtabKey].unlocked === void 0){
                         showThisSubTab = true;
@@ -147,6 +190,6 @@ function getUndulatingColor(period = Math.sqrt(760)) {
 
 function formatEndgame() {
     const x = getUndulatingColor()
-    const endgameText = "当前Endgame：" + colorText('b', x, Endgame.format()) + " mm<sup>4</sup>"
+    const endgameText = "当前Endgame：" + colorText('b', x, Endgame.format()) + " mm<sup>4</sup>, 总共 15 mm<sup>3</sup>"
     return endgameText
 }

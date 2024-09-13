@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,6 +11,8 @@
     <script src="./assets/script/technical/vue.min.js" defer></script>
     <script src="./assets/script/technical/ExpantaNum.js" defer></script>
     <script src="./assets/script/technical/format_expantanum.js" defer></script>
+    <script src="./assets/script/technical/hotkeys.js" defer></script>
+    <script src="./assets/script/formatTime.js" defer></script>
     <script src="./assets/script/display.js" defer></script>
     <script src="./assets/script/constants.js" defer></script>
     <script src="./assets/script/temp.js" defer></script>
@@ -18,9 +21,15 @@
     <script src="./assets/script/save.js" defer></script>
     <script src="./assets/script/components.js" defer></script>
     <script src="./assets/script/changelog.js" defer></script>
+    <script src="./assets/script/offline.js" defer></script>
+    <script src="./assets/script/dimboost.js" defer></script>
+    <script src="./assets/script/hotkeys.js" defer></script>
 
+    <script src="./assets/script/mm3.js" defer></script>
+    <script src="./assets/script/automation.js" defer></script>
 
 </head>
+
 <body>
     <div id="app">
         <div>
@@ -28,58 +37,89 @@
             <div class="text-center">
                 你有 <span class="vol-dis">{{formatWhole(player.volumes)}}</span> mm<sup>4</sup> 4维体积
             </div>
+            <div v-if="player.timeSpeed != 1" class="text-center">当前全局游戏速度: ×{{format(player.timeSpeed)}}</div>
+            <div v-if="player.volumes.gte(mm3Require)" class="text-center">你需要???才能走得更远！
+
+            </div>
+            <div v-if="player.volumes.gte(mm3Require)" class="text-center">
+                <button class="btn mm3btn" @click="doMM3resetManmade()">重置1-8维度，4维体积，维度提升，获得1 mm<sup>3</sup> 3维体积</button>
+            </div>
+            <div v-if="player.isPL1unlocked" class="mm3text text-center">你有{{format(player.PL1points)}} mm<sup>3</sup> 3维体积</div>
             <div v-if="isEndgame()" :style="{color: getUndulatingColor()}" class="text-center">已达到当前版本终点！</div>
         </div>
         <div class="main-line"></div>
         <div class="text-center">
-            <button v-for="tab in primaryTabSort()" :class="getTabClass(tab.name)" :style="tab.style" v-html="tab.text + tab.id" :disabled="tabShow.inPrimaryTab(tab.name)" @click="player.currentPage = tab.id">
-            
-            </button> 
+            <button v-for="tab in primaryTabSort()" :class="getTabClass(tab.name)" :style="tab.style" v-html="tab.text"
+                :disabled="tabShow.inPrimaryTab(tab.name)" @click="player.currentPage = tab.id">
+
+            </button>
         </div>
         <div class="main-line"></div>
         <div class="text-center">
-            <button v-for="tab in secondaryTabSort()" :class="getSubTabClass(tab.parentTab,tab.name)" :style="tab.style" v-html="tab.text + tab.id" :disabled="tabShow.inSecondaryTab(tab.parentTab,tab.name)" @click="player.currentPage = tab.id">
-            
+            <button v-for="tab in secondaryTabSort()" :class="getSubTabClass(tab.parentTab,tab.name)" :style="tab.style"
+                v-html="tab.text" :disabled="tabShow.inSecondaryTab(tab.parentTab,tab.name)"
+                @click="player.currentPage = tab.id">
+
             </button>
         </div>
-        <div  v-if="player.currentPage == 1" class="text-center">
-            <button class="btn" 
-            @click="buyall()"
-            @touchstart="isHoldMax = true;" @touchend="isHoldMax = false;"
-            v-on:mousedown="isHoldMax = true;" v-on:mouseup.native="isHoldMax = false;">
+        <div v-if="player.currentPage == 7">
+            <table v-if="hasMM3Upg(4)">
+                <tr>
+                    <td><button class="chalpl0">挑战1<br>禁用升级1的效果，1-8维度的增长速度为原来的^3<br>奖励：可以提升维度1自动购买器的间隔</button></td>
+                </tr>
+            </table>
+        </div>
+        <div v-if="player.currentPage == 8" v-html="getAutomationTabDetail()" class="text-center">
+        </div>
+        <div v-if="player.currentPage == 6" class="text-center">
+            <table>
+                <tr>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(1)}" @click="buyMM3Upg(1)">基于重置数量提升1-8维度，维度提升价格/1.000e10<br>花费：1 mm<sup>3</sup></button></td>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(2)}" @click="buyMM3Upg(2)">解锁自动<br>花费：1 mm<sup>3</sup></button></td>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(3)}" @click="buyMM3Upg(3)">解锁自动维度提升<br>花费：3 mm<sup>3</sup></button></td>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(4)}" @click="buyMM3Upg(4)">解锁挑战<br>花费：10 mm<sup>3</sup></button></td>
+                </tr>
+            </table>
+
+        </div>
+        <div v-if="player.currentPage == 1" class="text-center">
+            <button class="btn" @click="buyall()" @touchstart="isHoldMax = true;" @touchend="isHoldMax = false;"
+                v-on:mousedown="isHoldMax = true;" v-on:mouseup.native="isHoldMax = false;">
                 购买最大
             </button>
             <br>
+            <p>每次购买乘数: {{format(tmp.dimension.getBoughtMultiplier())}}</p>
             <div v-for="dim in dimensions" :key="dim.id" class="text-center">
-                    {{ dim.label }}
-                    +<span>{{
-                        format(player.dimensions[DIMENSIONS_POINTS][dim.id
-                        - 1]) }}
-                    </span>
-                    x<span>{{
-                        format(player.dimensions[DIMENSIONS_MULTI][dim.id
-                        - 1]) }}
-                    </span>
-                    ^<span>{{
-                        format(player.dimensions[DIMENSIONS_EXPONENT][dim.id
-                        - 1]) }}
-                    </span>
-                    <span>{{
-                        format(player.dimensions[DIMENSIONS_BOUGHT][dim.id
-                        - 1]) }}
-                    </span>
-                    <button class="btn" :disabled="!buyable(dim.id)" @click="buydim(dim.id)">价格: {{format(player.dimensions[DIMENSIONS_COST][dim.id - 1 ])}} mm<sup>4</sup></button>
-                    <!-- <button class="btn" :disabled="!buyable(dim.id)" @click="buydim(dim.id)">
+                {{ dim.label }}
+                +<span>{{
+                    format(player.dimensions[DIMENSIONS_POINTS][dim.id
+                    - 1]) }}
+                </span>
+                x<span>{{
+                    format(player.dimensions[DIMENSIONS_MULTI][dim.id
+                    - 1]) }}
+                </span>
+                ^<span>{{
+                    format(player.dimensions[DIMENSIONS_EXPONENT][dim.id
+                    - 1]) }}
+                </span>
+                <span>{{
+                    format(player.dimensions[DIMENSIONS_BOUGHT][dim.id
+                    - 1]) }}
+                </span>
+                <button class="btn" :disabled="!buyable(dim.id)" @click="buydim(dim.id)">价格:
+                    {{format(player.dimensions[DIMENSIONS_COST][dim.id - 1 ])}} mm<sup>4</sup></button>
+                <!-- <button class="btn" :disabled="!buyable(dim.id)" @click="buydim(dim.id)">
                         Cost: <span v-html="format(player.dimensions[DIMENSIONS_COST][dim.id
                             - 1])"></span>
+                    </button>-->
+                    <button class="btn" v-if="hasMM3Upg(2)" @click="toggleAutobuyer(dim.id)">
+                        自动: {{player.auto.includes(dim.id) ? "开" :
+                        "关"}}
                     </button>
-                    <button class="btn" v-if="hasMM4Upg(5)" @click="toggleAutobuyer(dim.id)">
-                        Auto: {{player.auto.includes(dim.id) ? "ON" :
-                        "OFF"}}
-                    </button> -->
             </div>
         </div>
-        
+
         <div v-if="player.currentPage == 2" class="text-center">
             <button class="btn" @click="formattedHardReset">硬重置</button>
             <button class="btn" @click="exportCopy">导出</button>
@@ -96,7 +136,7 @@
                 <a href="https://github.com/cloudytheconqueror/letter-notation-format"
                     target="_blank">cloudytheconqueror/letter-notation-format</a>
                 处理大数字<br />
-                
+
                 <hr>
                 <p>
                     支持所有序数增量吧吧友，点击下面玩吧友们制作的游戏
@@ -104,10 +144,12 @@
                 <a href="https://seanxlx2011.github.io/" target="_blank" class="game-link">
                     Incremental Data
                     Rewritten</a>,<br />
-                <a href="https://0i00000000a7.github.io/points-incremental-rewritten/" target="_blank" class="game-link">
+                <a href="https://0i00000000a7.github.io/points-incremental-rewritten/" target="_blank"
+                    class="game-link">
                     Points Incremental Rewritten
                 </a>,<br />
-                <a href="https://aster131072.github.io/incremental_evolution/" target="_blank" class="game-link">Incremental
+                <a href="https://aster131072.github.io/incremental_evolution/" target="_blank"
+                    class="game-link">Incremental
                     Evolution</a>,<br />
                 <a href="https://dlsdl.github.io/wind_spirit_creation/" target="_blank" class="game-link">Wind
                     spirit
@@ -115,8 +157,9 @@
                 <a href="https://qqqe308.github.io/The-Rhythm-Game-Tree/" target="_blank" class="game-link">The Rhythm
                     Game
                     Tree
-                    </a>,<br />
-                <a href="https://a262537412640768744.github.io/homework-incremental/main.html" target="_blank" class="game-link">
+                </a>,<br />
+                <a href="https://a262537412640768744.github.io/homework-incremental/main.html" target="_blank"
+                    class="game-link">
                     Homework Incremental </a>,<br />
                 <a href="https://goldenapple125.github.io/RBN/" target="_blank" class="game-link">The Road of
                     Big Number </a>,<br />
@@ -133,11 +176,33 @@
                     The Prestige Tree </a>,<br />
                 <a href="https://patcailmemer.github.io/Ordinal-Markup" target="_blank" class="game-link tooltipBox">
                     Ordinal Markup<span class="tooltip">Stop updated on Mar 23, 2021</span> </a><br />
-                    <hr />
-                    <h1>---更新日志---</h1>
-                    <changelog></changelog>
+                <hr />
+                <h1>---更新日志---</h1>
+                <changelog></changelog>
             </div>
+        </div>
+        <div v-if="player.currentPage == 4" class="text-center">
+            <div>
+                <p>维度提升({{format(player.dimBoost)}})</p>
+                <button class="btn" @click="dimBoost" v-html="dimBoostDescription()"></button><br>
+                <button class="btn" v-if="hasMM3Upg(3)" @click="toggleAutobuyer(9)">
+                    自动: {{player.auto.includes(9) ? "开" :
+                    "关"}}
+                </button>
+            </div>
+            <div v-html="statBoosts()"></div>
+
+        </div>
+        <div v-if="player.currentPage == 5" class="text-center">
+            <p style="color: #aaa">你离线了{{formatTime.fromSeconds(player.offlinedTime)}}</p>
+            <p>拉动下面的进度条可以改变游戏速度，但需要消耗离线时间</p>
+            <p><button class="btn" @click="switchGameState">切换游戏状态<br>当前：{{player.isOffline ? "停止" : "未停止"}}</button>
+            </p>
+            <input type="range" min="0" max="7" step="0.001" style="width: 300px"
+                v-model.number="player.offlinePower"><br>
+
         </div>
     </div>
 </body>
+
 </html>

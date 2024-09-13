@@ -3,18 +3,43 @@ var thisFrame = Date.now();
 var lastFrame = Date.now();
 
 var isHoldMax = false;
+var globalDiff = 0;
+var realityDiff = 0;
 function loop(){
     thisFrame = Date.now();
-    diff = (thisFrame-lastFrame)/1000;
+    window.realityDiff = (thisFrame-lastFrame)/1000;
+    window.globalDiff = realityDiff;
+    updateOffline();
     updateDimensionData();
     calculateDimensions();
     updateVolumes();
+    fixInfinity();
+    automationLoop();
+    mm3Loop();
     player.time = thisFrame
     lastFrame = thisFrame;
 }
+/*
+function updateAuto() {
+    if (hasMM3Upg(2)){
+        for (let i = 1; i<=8; i++){
+            if (player.auto.includes(i)){
+                buydim(i,true);
+            }
+        }
+    }
+    if (hasMM3Upg(3)){
+        if (player.auto.includes(9) && player.volumes.lt(mm3Require)){
+            dimBoost()
+        }
+    }
+}*/
 
 function buyable(dim) {
     let temp1 = player.dimensions[DIMENSIONS_COST][dim - 1]
+    if (player.volumes.gte(mm3Require)){
+        return false
+    }
     return player.volumes.gte(temp1)
 }
 
@@ -36,7 +61,7 @@ function calculateDimensions() {
                 player.dimensions[DIMENSIONS_POINTS][i + 1]
                     .mul(player.dimensions[DIMENSIONS_MULTI][i + 1])
                     .pow(player.dimensions[DIMENSIONS_EXPONENT][i + 1])
-                    .mul(diff)
+                    .mul(globalDiff)
             );
         if (player.dimensions[DIMENSIONS_POINTS][i].isNaN()) {
             player.dimensions[DIMENSIONS_POINTS][i] = E(0);
@@ -61,18 +86,13 @@ function calc_cost(dimid, count) {
     // 1st dimension dimid = 0
     let temp1 = 
         E.mul(dimBasePrice[dimid],tmp.dimension.getDimScale(dimid + 1).pow(count.floor()));
+
     return temp1;
 }
 function updateVolumes() {
-    player.volumes = player.volumes.add(tmp.mm4.gain.mul(diff))
+    player.volumes = player.volumes.add(tmp.mm4.gain.mul(globalDiff))
 }
 function buydim(dim, single = false) {
-    if (single) {
-        if (player.volumes.gte(player.dimensions[DIMENSIONS_COST][dim - 1])) {
-            player.dimensions[DIMENSIONS_BOUGHT][dim - 1] = player.dimensions[DIMENSIONS_BOUGHT][dim - 1].add(1);
-            return true;
-        }
-    }
     if (player.volumes.gte(player.dimensions[DIMENSIONS_COST][dim - 1])) {
         let temp1 = player.volumes.logarithm(tmp.dimension.getDimScale(dim))
         let temp2 = (player.dimensions[DIMENSIONS_COST][dim - 1]).logarithm(tmp.dimension.getDimScale(dim))
@@ -81,6 +101,10 @@ function buydim(dim, single = false) {
         let temp3 = buycount.clone();
 
         if (buycount.lt(1)) {
+            buycount = E(1)
+        }
+        
+        if (single) {
             buycount = E(1)
         }
         player.dimensions[DIMENSIONS_BOUGHT][dim - 1] = player.dimensions[DIMENSIONS_BOUGHT][dim - 1].add(buycount);
@@ -94,6 +118,16 @@ function buydim(dim, single = false) {
 
 }
 
+
+function toggleAutobuyer(i) {
+    let temp1 = player.auto.indexOf(i)
+    if (temp1 == -1) {
+        player.auto.push(i)
+    } else {
+        player.auto.splice(temp1, 1)
+    }
+}
+
 (function() {
     document.addEventListener('DOMContentLoaded', function(e) {
         load(e);
@@ -103,5 +137,5 @@ function buydim(dim, single = false) {
 })();
 
 function isEndgame(){
-    return player.volumes.gte(Endgame)
+    return player.volumes.gte(Endgame) && player.PL1total.gte(15);
 }
