@@ -16,8 +16,13 @@ function loop(){
     fixInfinity();
     automationLoop();
     mm3Loop();
+    updateTime();
     player.time = thisFrame
     lastFrame = thisFrame;
+}
+function updateTime(){
+    player.dimBoostTimespent = player.dimBoostTimespent+globalDiff;
+    player.PL1Timespent = player.PL1Timespent+globalDiff;
 }
 /*
 function updateAuto() {
@@ -36,8 +41,13 @@ function updateAuto() {
 }*/
 
 function buyable(dim) {
+    if (player.PL1inchal == 3){
+        if (dim > 6){
+            return false
+        }
+    }
     let temp1 = player.dimensions[DIMENSIONS_COST][dim - 1]
-    if (player.volumes.gte(mm3Require)){
+    if (player.volumes.gte(mm3Require)  && !player.PL1breakedPL1limit){
         return false
     }
     return player.volumes.gte(temp1)
@@ -82,6 +92,11 @@ function updateDimensionData() {
 }
 const dimBasePrice=[7,7**2,7**3,7**4,7**5,7**6,7**7,7**8]
 function calc_cost(dimid, count) {
+    if (player.PL1inchal == 3){
+        if (dimid > 6-1){
+            return K9E15
+        }
+    }
     // count before buy
     // 1st dimension dimid = 0
     let temp1 = 
@@ -93,7 +108,7 @@ function updateVolumes() {
     player.volumes = player.volumes.add(tmp.mm4.gain.mul(globalDiff))
 }
 function buydim(dim, single = false) {
-    if (player.volumes.gte(player.dimensions[DIMENSIONS_COST][dim - 1])) {
+    if (buyable(dim)) {
         let temp1 = player.volumes.logarithm(tmp.dimension.getDimScale(dim))
         let temp2 = (player.dimensions[DIMENSIONS_COST][dim - 1]).logarithm(tmp.dimension.getDimScale(dim))
         let bought_now = player.dimensions[DIMENSIONS_BOUGHT][dim - 1];
@@ -137,5 +152,16 @@ function toggleAutobuyer(i) {
 })();
 
 function isEndgame(){
-    return player.volumes.gte(Endgame) && player.PL1total.gte(15);
+    return player.volumes.gt(Endgame)
+}
+
+function softcap(value,start,power,mode,dis=false){
+    var x = value.clone()
+    if (!dis&&x.gte(start)) {
+        if ([0, "pow"].includes(mode)) x = x.div(start).max(1).pow(power).mul(start)
+        if ([1, "mul"].includes(mode)) x = x.sub(start).div(power).add(start)
+        if ([2, "exp"].includes(mode)) x = expMult(x.div(start), power).mul(start)
+        if ([3, "log"].includes(mode)) x = x.div(start).log(power).add(1).mul(start)
+    }
+    return x
 }

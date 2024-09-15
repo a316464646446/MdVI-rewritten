@@ -1,11 +1,20 @@
 function dimBoost() {
     if (player.volumes.gte(tmp.dimensionBoost.require())){
-        player.dimBoost = player.dimBoost.add(1)
-        resetDimensions();
-        if (player.dimBoost.gte(14)){
-            player.volumes = dimBoostReward[6].effect()
+        if (!hasMM3Upg(5)){
+            player.dimBoost = player.dimBoost.add(1)
         }else{
-            player.volumes = E(7)
+            player.dimBoost = E.max(player.dimBoost,
+                player.volumes.mul("1e10").logarithm(7).sub(36).div(4).ceil() 
+            )
+        }
+        if (!hasMM3Upg(9)){
+            resetDimensions();
+            player.dimBoostTimespent = 0;
+            if (player.dimBoost.gte(14)){
+                player.volumes = dimBoostReward[6].effect()
+            }else{
+                player.volumes = E(7)
+            }
         }
     }
 }

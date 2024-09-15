@@ -6,6 +6,8 @@ const DIMENSIONS_COST = 3;
 const DIMENSIONS_EXPONENT = 4;
 const DIMENSIONS_DBEXPONENT = 5;
 
-const Endgame = E("e200");
+const Endgame = E("e233");
 
 const mm3Require = E("e200");
+
+const K9E15 = ExpantaNum.expansion(10,2**53-1)

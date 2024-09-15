@@ -1,5 +1,14 @@
 const changelog = [
     {
+        version: "2.1.1", title: "硬上限：啊，我被封印了，功力只剩一成",
+        changes: [
+            "添加了6个升级",
+            "添加了1个购买项",
+            "添加了3个挑战",
+            "添加了1个可以移除硬上限的升级"
+        ]
+    },
+    {
         version: "2.1.0", title: "3.3333维体积",
         changes: [
             "添加mm<sup>3</sup>重置",
@@ -25,7 +34,7 @@ Vue.component("changelog", {
     template: `
         <div>
             <div v-for="(log, index) in changelog" :key="index">
-            <h3>v{{ log.version }}</h3>
+            <h3>v{{ log.version }} {{ log.title }}</h3>
                 <li v-for="(change, changeIndex) in log.changes" :key="changeIndex" v-html="change"></li>
             </div>
         </div>

@@ -28,6 +28,8 @@ function hardReset() {
         time: Date.now(),
 
         dimBoost: E(0),
+        dimBoostTimespent: 0,
+
         auto: [],
 
         offlinedTime: 0,
@@ -38,10 +40,23 @@ function hardReset() {
 
         // mm^3
         isPL1unlocked: false,
+        PL1Timespent: 0,
         PL1points: E(0),
         PL1times: E(0),
         PL1total: E(0),
         PL1upgrades: [],
+        PL1chal: [],
+        PL1inchal: 0,
+
+        PL1autoupg1: 0,
+        PL1autoupg2: 0,
+        PL1autoupgDIMBOOST:0,
+        PL1autoupgMM3RESET: 0,
+
+        PL1buyable1: E(0),
+
+        PL1breakedPL1limit: false,
+
         automationState: {
             
         }

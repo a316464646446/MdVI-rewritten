@@ -38,12 +38,14 @@
                 你有 <span class="vol-dis">{{formatWhole(player.volumes)}}</span> mm<sup>4</sup> 4维体积
             </div>
             <div v-if="player.timeSpeed != 1" class="text-center">当前全局游戏速度: ×{{format(player.timeSpeed)}}</div>
-            <div v-if="player.volumes.gte(mm3Require)" class="text-center">你需要???才能走得更远！
+            <div v-if="player.volumes.gte(mm3Require) && !player.PL1breakedPL1limit" class="text-center">你需要???才能走得更远！
 
             </div>
-            <div v-if="player.volumes.gte(mm3Require)" class="text-center">
-                <button class="btn mm3btn" @click="doMM3resetManmade()">重置1-8维度，4维体积，维度提升，获得1 mm<sup>3</sup> 3维体积</button>
+            <div v-if="hasMM3Upg(4)" v-html="displayChallenge()" class="text-center"></div>
+            <div v-if="player.volumes.gte(mm3Require) && !player.PL1breakedPL1limit" class="text-center">
+                <button class="btn mm3btn" @click="doMM3resetManmade()">重置1-8维度，4维体积，维度提升，获得{{format(tmp.mm3.gain)}} mm<sup>3</sup> 3维体积</button>
             </div>
+            <div v-if="player.PL1autoupgMM3RESET==7 && !player.PL1breakedPL1limit" class="text-center">在某些什么地方附近，有一股打破的力量正在觉醒...</div>
             <div v-if="player.isPL1unlocked" class="mm3text text-center">你有{{format(player.PL1points)}} mm<sup>3</sup> 3维体积</div>
             <div v-if="isEndgame()" :style="{color: getUndulatingColor()}" class="text-center">已达到当前版本终点！</div>
         </div>
@@ -62,14 +64,27 @@
 
             </button>
         </div>
-        <div v-if="player.currentPage == 7">
-            <table v-if="hasMM3Upg(4)">
+        <div v-if="player.currentPage == 7" v-if="hasMM3Upg(4)">
+            <p class="text-center">下列是挑战，在进入挑战时会进行一次无奖励的重置，<br>如果在这个挑战里成功进行一次mm<sup>3</sup>重置，则为通过这个挑战。</p>
+            <p class="text-center"><button class="btn mm3btn" @click="exitChal()">退出挑战</button></p>
+            <table>
                 <tr>
-                    <td><button class="chalpl0">挑战1<br>禁用升级1的效果，1-8维度的增长速度为原来的^3<br>奖励：可以提升维度1自动购买器的间隔</button></td>
+                    <td><button class="chalpl0" @click="enterNorChal(1)" :class="getChalClass(1)">挑战1<br>1-8维度的增长速度为原来的^2<br>奖励：你可以提升维度1自动购买器的间隔</button></td>
+                    <td><button class="chalpl0" @click="enterNorChal(2)" :class="getChalClass(2)" style="font-size: 11px">挑战2<br>2-8维度指数为0，但2-8维度的指数随着在这一次维度提升所经过的时间而增加（最高0.7），第1维度指数为1.5,在维度提升>3后第一维度指数为3,2-8维度指数上限0.8<br>奖励：你可以提升维度2自动购买器的间隔</button></td>
+                    <td><button class="chalpl0" @click="enterNorChal(3)" :class="getChalClass(3)">挑战3<br>你只能购买前6个维度,第1维度指数为1.1<br>奖励：解锁自动mm<sup>3</sup>重置。你可以提升自动维度提升的间隔</button></td>
                 </tr>
             </table>
         </div>
-        <div v-if="player.currentPage == 8" v-html="getAutomationTabDetail()" class="text-center">
+        <div v-if="player.currentPage == 9" class="text-center">
+            <button class="btn mm3btn" @click="doMM3resetManmade()">重置1-8维度，4维体积，维度提升，获得{{format(tmp.mm3.gain)}} mm<sup>3</sup> 3维体积</button>
+            
+        </div>
+        <div v-if="player.currentPage == 8" class="text-center">
+            <div v-html="getAutomationTabDetail()"></div>
+            <button class="btn" v-if="player.PL1chal.includes(3)" @click="toggleAutobuyer(10)">
+                自动mm<sup>3</sup>重置: {{player.auto.includes(10) ? "开" :
+                "关"}}
+            </button>
         </div>
         <div v-if="player.currentPage == 6" class="text-center">
             <table>
@@ -78,6 +93,28 @@
                     <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(2)}" @click="buyMM3Upg(2)">解锁自动<br>花费：1 mm<sup>3</sup></button></td>
                     <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(3)}" @click="buyMM3Upg(3)">解锁自动维度提升<br>花费：3 mm<sup>3</sup></button></td>
                     <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(4)}" @click="buyMM3Upg(4)">解锁挑战<br>花费：10 mm<sup>3</sup></button></td>
+                </tr>
+                <tr>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(5)}" @click="buyMM3Upg(5)">你可以最大化维度提升<br>花费：15 mm<sup>3</sup></button></td>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(6)}" @click="buyMM3Upg(6)">每次重置开始于10维度提升，1-5维度自动购买器间隔总是为0ms<br>花费：25 mm<sup>3</sup></button></td>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(7)}" @click="buyMM3Upg(7)">每次重置开始于35维度提升，6-8维度自动购买器间隔总是为0ms<br>花费：40 mm<sup>3</sup></button></td>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(8)}" @click="buyMM3Upg(8)">在此页面解锁购买项<br>花费：60 mm<sup>3</sup></button></td>
+                </tr>
+                <tr>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(9)}" @click="buyMM3Upg(9)">维度提升不重置任何东西<br>花费：95 mm<sup>3</sup></button></td>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(10)}" @click="buyMM3Upg(10)">你可以提升自动mm<sup>3</sup>重置的间隔<br>花费：240 mm<sup>3</sup></button></td>
+                    <td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
+                    <td><button class="mm3upg" v-if="player.PL1autoupgMM3RESET==7" :class="{unlocked: hasMM3Upg(11)}" @click="buyMM3Upg(11)">取消4维体积在1.000e200的硬上限（转为软上限）<br>花费：0 mm<sup>3</sup></button></td>
+                </tr>
+                <tr>
+                    <td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
+                </tr>
+                <tr>
+                    <td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
+                    <td v-if="hasMM3Upg(8)"><button class="mm3upg" @click="buyBuyable(1)">双倍mm<sup>3</sup>获取({{ formatWhole(player.PL1buyable1) }})<br>花费：{{format(getBuyableCost(1))}} mm<sup>3</sup><br>效果: ×{{format(getBuyableEffect(1))}}</button></td>
+                    <td v-else><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
+                    <td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
+                    <td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
                 </tr>
             </table>
 
@@ -117,6 +154,9 @@
                         自动: {{player.auto.includes(dim.id) ? "开" :
                         "关"}}
                     </button>
+            </div>
+            <div style="color: red" v-if="tmp.mm4.softcapped1">
+                因为4维体积获取超过了 <b v-html="format(tmp.mm4.softcap1start)"></b> mm<sup>4</sup> 每秒，因此4维体积获取将被软上限限制！
             </div>
         </div>
 
@@ -201,6 +241,19 @@
             <input type="range" min="0" max="7" step="0.001" style="width: 300px"
                 v-model.number="player.offlinePower"><br>
 
+        </div>
+        <div v-if="player.currentPage == 11870903" class="text-center">
+            <br>
+            <br>
+            <button style="
+            background: #eeeeee;
+            animation: a-tesseract-shift-dark 5s infinite;
+            max-width: 150px;
+            color: #000;
+            cursor: pointer;
+            ">You doesn't have enough Infinity Points to buy a Tesseract</button><br><br><br>
+            <div  style="
+            animation: bigcrunch 2s infinite;">啊，我被大嘎吱嘎吱了，功力只剩一成</div>
         </div>
     </div>
 </body>

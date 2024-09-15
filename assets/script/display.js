@@ -75,6 +75,17 @@ var tabShow = {
             return hasMM3Upg(2)
         }
     },
+    reset: {
+        text: "重置",
+        firstTabID: 9,
+        faketab: {
+            unlocked(){return false},
+            id: 9
+        },
+        unlocked(){
+            return player.PL1breakedPL1limit
+        }
+    },
     mm3: {
         text: "3维体积",
         firstTabID : 6,
@@ -88,7 +99,11 @@ var tabShow = {
             class: "mm3btn",
             text: "挑战"
         },
-        class: "mm3btn",
+        get class(){
+            return "mm3btn "+(
+                player.PL1autoupgMM3RESET==7 && !player.PL1breakedPL1limit ? "breakable" : ""
+            )
+        } ,
         unlocked() {
             return player.isPL1unlocked;
         }
@@ -103,6 +118,17 @@ var tabShow = {
         about: {
             id: 3,
             text: "关于"
+        }
+    },
+    test: {
+        text: "1187",
+        firstTabID: 11870903,
+        test: {
+            id: 11870903,
+            text: "测试"
+        },
+        unlocked(){
+            return location.host.includes("127.0.0.1")
         }
     }
 };
@@ -190,6 +216,6 @@ function getUndulatingColor(period = Math.sqrt(760)) {
 
 function formatEndgame() {
     const x = getUndulatingColor()
-    const endgameText = "当前Endgame：" + colorText('b', x, Endgame.format()) + " mm<sup>4</sup>, 总共 15 mm<sup>3</sup>"
+    const endgameText = "当前Endgame：" + colorText('b', x, Endgame.format()) + " mm<sup>4</sup>"
     return endgameText
 }
