@@ -18,6 +18,9 @@ function dimBoost() {
         }
     }
 }
+function getRealDimBoost(){
+    return player.dimBoost.add(xiaopengyouEffect2())
+}
 function getDimBoughts() {
     let x = E(0);
     for (let i = 0; i < 8 ;i++){
@@ -34,7 +37,7 @@ const dimBoostReward=[
         req: E(1),
         desc: "基于维度提升数量提升1-8维度乘数 (1+n)<sup>2</sup>",
         get effectDisplay(){
-            return "×"+format(player.dimBoost.add(1).pow(2))
+            return "×"+format(getRealDimBoost().add(1).pow(2))
         }
     },
     {
@@ -55,7 +58,7 @@ const dimBoostReward=[
         req: E(9),
         desc: "基于维度提升数量提升每次购买乘数 +0.04n<sup>0.25</sup>",
         get effectDisplay() {
-            return "+"+format(player.dimBoost.pow(0.25).mul(0.04))
+            return "+"+format(getRealDimBoost().pow(0.25).mul(0.04))
         }
     },
     {
@@ -86,7 +89,7 @@ const dimBoostReward=[
         req: E(23),
         desc: "每一个维度提升使所有维度×1.3",
         effect() {
-            return E.pow(1.3,player.dimBoost)
+            return E.pow(1.3,getRealDimBoost())
         },
         get effectDisplay() {
             return "×"+format(this.effect())
@@ -96,7 +99,7 @@ const dimBoostReward=[
 
 function dimBoostDescription(){
     let a =  `重置4维体积，1-8维度，但进行一次维度提升<br>价格：${format(tmp.dimensionBoost.require())} mm<sup>4</sup>`
-    let x = player.dimBoost;
+    let x = getRealDimBoost();
     if (x.lt(dimBoostReward[dimBoostReward.length-1].req)){
         for (let i=0;i<dimBoostReward.length;i++){
             if (x.lt(dimBoostReward[i].req)){
@@ -108,7 +111,7 @@ function dimBoostDescription(){
                     a = a.concat("<br>当前:");
                     a = a.concat(dimBoostReward[i].effectDisplay);
                 }
-                return a;
+                break;
             }
         }
     }
@@ -117,7 +120,7 @@ function dimBoostDescription(){
 
 function statBoosts() {
     let temp1 = "";
-    let x = player.dimBoost;
+    let x = getRealDimBoost();
     for (let i=0;i<dimBoostReward.length;i++){
         if (x.gte(dimBoostReward[i].req)){
             let a = "";
@@ -134,6 +137,74 @@ function statBoosts() {
             a = ""
         }
     }
+    temp1 = temp1.concat("<br>")
+    let y = player.dimBoost2;
+    for (let i=0;i<dimBoostReward2.length;i++){
+        if (y.gte(dimBoostReward2[i].req)){
+            let a = "";
+            a = a.concat("<br>在")
+            a = a.concat(dimBoostReward2[i].req.format())
+            a = a.concat("维度提升^2, ")
+            a = a.concat(dimBoostReward2[i].desc)
+            if (dimBoostReward2[i].effectDisplay){
+                a = a.concat("  当前:");
+                a = a.concat(dimBoostReward2[i].effectDisplay);
+            }
+            temp1 = temp1.concat(a)
+            temp1 = temp1.concat("<br>")
+            a = ""
+        }
+    }
     return temp1;
 
+}
+const dimBoostReward2 = [
+
+    {
+        req: E(1),
+        desc: "1-8维度指数+0.01",
+    },
+    {
+        req: E(2),
+        desc: "基于维度提升^2的数量提升小朋友获取",
+        effect(){
+            return player.dimBoost2.root(2).max(1)
+        },
+        get effectDisplay(){
+            return "×"+format(this.effect())
+        }
+    }
+]
+function dimBoost2(){
+    if (player.volumes.gte(tmp.dimensionBoost.require2())){
+        player.dimBoost2 = player.dimBoost2.add(1)
+        player.dimBoostTimespent = 0;
+        resetDimensions();
+        player.volumes = E(7)
+        player.dimBoost = E(35)
+
+    }
+
+}
+
+
+function dimBoost2Description(){
+    let a =  `重置4维体积，1-8维度，和维度提升但进行一次维度提升<br>价格：${format(tmp.dimensionBoost.require2())} mm<sup>4</sup>`
+    let x = getRealDimBoost();
+    if (x.lt(dimBoostReward2[dimBoostReward2.length-1].req)){
+        for (let i=0;i<dimBoostReward2.length;i++){
+            if (x.lt(dimBoostReward2[i].req)){
+                a = a.concat("<br>在")
+                a = a.concat(dimBoostReward2[i].req.format())
+                a = a.concat("维度提升^2, ")
+                a = a.concat(dimBoostReward2[i].desc)
+                if (dimBoostReward2[i].effectDisplay){
+                    a = a.concat("<br>当前:");
+                    a = a.concat(dimBoostReward2[i].effectDisplay);
+                }
+                return a;
+            }
+        }
+    }
+    return a
 }

@@ -3,6 +3,18 @@
     var texts = [
         {
             text: "这是一条新闻"
+        },
+        {
+            text: "史上平衡最差的增量游戏是什么？IMR和IDR算什么，WSC才是真神"
+        },
+        {
+            text: "All miracl... 抱歉走错了"
+        },
+        {
+            text: "通关了？如过？超级过关了？如超？究极过关了？F1.797e308"
+        },
+        {
+            text: "Darkest night, I'll confront you here"
         }
     ];
     textslength = texts.length;

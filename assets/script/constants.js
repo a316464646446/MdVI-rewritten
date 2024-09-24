@@ -6,7 +6,7 @@ const DIMENSIONS_COST = 3;
 const DIMENSIONS_EXPONENT = 4;
 const DIMENSIONS_DBEXPONENT = 5;
 
-const Endgame = E("e233");
+const Endgame = E("e1125");
 
 const mm3Require = E("e200");
 

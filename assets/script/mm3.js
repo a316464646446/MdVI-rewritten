@@ -1,19 +1,30 @@
 const mm3UpgradeCost = [
-    1, 1, 3, 10, 15, 25, 40, 60, 95, 240, 0
+    1, 1, 3, 10, 15, 25, 40, 60, 95, 240, 0, "5e17",
+    2000
 ]
 function hasMM3Upg(x){
     return player.PL1upgrades.includes(x)
 }
 function buyMM3Upg(x){
-    if (player.PL1points.gte(mm3UpgradeCost[x-1]) && !hasMM3Upg(x)){
+    if (x <= 12 && player.PL1points.gte(mm3UpgradeCost[x-1]) && !hasMM3Upg(x)){
         player.PL1upgrades.push(x);
         player.PL1points = player.PL1points.sub(mm3UpgradeCost[x-1])
+    }
+    if (x <= 22 && player.PL1xiaopengyouPoints.gte(mm3UpgradeCost[x-1]) && !hasMM3Upg(x)){
+        player.PL1upgrades.push(x);
+        player.PL1xiaopengyouPoints = player.PL1xiaopengyouPoints.sub(mm3UpgradeCost[x-1])
+
     }
 }
 
 function fixInfinity(){
-    if (hasMM3Upg(11)){
-        player.PL1breakedPL1limit = true
+    if (player.PL1times.gte(1) ){
+        if (player.PL1inchal!=0){
+            player.PL1breakedPL1limit = false
+        }else{
+            
+            player.PL1breakedPL1limit = true
+        }
     }
     if (player.volumes.gte(mm3Require) && !player.PL1breakedPL1limit){
         player.volumes = mm3Require.clone();
@@ -90,12 +101,18 @@ function displayChallenge(){
 
 function getBuyableCost(x){
     if (x==1){
-        return E(7).pow(player.PL1buyable1)
+        return softcap(E(7).pow(player.PL1buyable1),7**18,2,"pow")
+    }
+    if (x==2){
+        return E(14).pow(player.PL1buyable2)
     }
 }
 function getBuyableEffect(x){
     if (x==1){
         return E(2).pow(player.PL1buyable1)
+    }
+    if (x==2){
+        return E(2).pow(player.PL1buyable2)
     }
 }
 function buyBuyable(x){
@@ -106,5 +123,37 @@ function buyBuyable(x){
                 player.PL1buyable1 = player.PL1buyable1.add(1);
             }
             break;
+            
+        case 2:
+            if (player.PL1xiaopengyouPoints.gte(getBuyableCost(2))){
+                player.PL1xiaopengyouPoints = player.PL1xiaopengyouPoints.sub(getBuyableCost(2))
+                player.PL1buyable2 = player.PL1buyable2.add(1);
+            }
+            break;
     }
+}
+
+function unlockXiaopengyou(){
+    if (player.PL1points.gte("1e6")){
+        player.PL1xiaopengyouUnl = true
+    }
+}
+function getXiaopengyouGain(){
+    return E(1).mul(getBuyableEffect(2)).mul(
+        player.dimBoost2.gte(2) ? dimBoostReward2[1].effect() : 1
+    )
+}
+function xiaopengyouLoop(){
+    if (player.PL1xiaopengyouUnl){
+        // globalDiff
+        player.PL1xiaopengyouPoints = player.PL1xiaopengyouPoints.add(getXiaopengyouGain().mul(globalDiff))
+    }
+}
+
+function xiaopengyouEffect1(){
+    return player.PL1xiaopengyouPoints.add(9).logarithm(3).add(1).logarithm(3)
+}
+
+function xiaopengyouEffect2(){
+    return player.PL1xiaopengyouPoints.gte(1000) ? player.PL1xiaopengyouPoints.logarithm(7).max(0):0
 }

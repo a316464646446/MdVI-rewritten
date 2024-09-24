@@ -142,8 +142,8 @@ function format(num, precision=2, small=false) {
       return regularFormat(num, precision + 2)
     }
     else if (num.lt(1000)) return regularFormat(num, precision)
-    else if (num.lt(1e9)) return commaFormat(num)
-    else if (num.lt("10^^5")) { // 1e9 ~ 1F5
+    else if (num.lt(1e6)) return commaFormat(num)
+    else if (num.lt("10^10^10^10^6")) { // 1e9 ~ 1F5
         let bottom = arraySearch(array, 0)
         let rep = arraySearch(array, 1)-1
         if (bottom >= 1e6) {

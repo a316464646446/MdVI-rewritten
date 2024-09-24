@@ -154,3 +154,28 @@ button{
     border-color: var(--color-text-invert);
     background-color: var(--color-text-invert);
 }
+.milestone{
+    
+    border: 2px solid;
+    
+    background-color: var(--color-text-invert);
+    height: 48px;
+    width: 958px;
+    padding: 6px 6px;
+    margin: 0px auto;
+    text-align: center;
+}
+
+.backgroundsettingnote {
+    width: 250px;
+    height: 250px; 
+    border: #fff solid 1px; 
+    margin: auto;
+    transition-duration: 100ms;
+}
+.backgroundsettingnote:hover{
+    background: #333;
+}
+.backgroundsettingnote:active{
+    background: #666;
+}

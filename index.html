@@ -45,7 +45,6 @@
             <div v-if="player.volumes.gte(mm3Require) && !player.PL1breakedPL1limit" class="text-center">
                 <button class="btn mm3btn" @click="doMM3resetManmade()">重置1-8维度，4维体积，维度提升，获得{{format(tmp.mm3.gain)}} mm<sup>3</sup> 3维体积</button>
             </div>
-            <div v-if="player.PL1autoupgMM3RESET==7 && !player.PL1breakedPL1limit" class="text-center">在某些什么地方附近，有一股打破的力量正在觉醒...</div>
             <div v-if="player.isPL1unlocked" class="mm3text text-center">你有{{format(player.PL1points)}} mm<sup>3</sup> 3维体积</div>
             <div v-if="isEndgame()" :style="{color: getUndulatingColor()}" class="text-center">已达到当前版本终点！</div>
         </div>
@@ -64,14 +63,30 @@
 
             </button>
         </div>
-        <div v-if="player.currentPage == 7" v-if="hasMM3Upg(4)">
-            <p class="text-center">下列是挑战，在进入挑战时会进行一次无奖励的重置，<br>如果在这个挑战里成功进行一次mm<sup>3</sup>重置，则为通过这个挑战。</p>
+        <div class="main-line"></div>
+        <div v-if="player.currentPage == 10">
+            <div class="text-center" v-if="!player.PL1xiaopengyouUnl"><button class="btn mm3btn" @click="unlockXiaopengyou()">
+                解锁小朋友<br>
+                需要1.000e6 mm<sup>3</sup>
+            </button></div>
+            <div v-else>
+                <div class="text-center">
+                    <p>你有<span class="mm3text">{{format(player.PL1xiaopengyouPoints)}}(+{{format(getXiaopengyouGain())}}/s)</span>小朋友，他们使每次购买的乘数×{{format(xiaopengyouEffect1())}}</p>
+                    <p>已解锁一个新的购买项在"升级"选项卡</p>
+                </div>
+                <p class="mm3text text-center">
+                    在1000小朋友，基于小朋友数量获得额外的维度提升<br>
+                    当前：+{{format(xiaopengyouEffect2())}}
+                </p>
+            </div>
+        </div>
+        <div v-if="player.currentPage == 7 && hasMM3Upg(4)">
+            <p class="text-center">下列是挑战，在进入挑战时会进行一次无奖励的重置，<br>如果在这个挑战里达到了目标，则为通过这个挑战。</p>
             <p class="text-center"><button class="btn mm3btn" @click="exitChal()">退出挑战</button></p>
             <table>
                 <tr>
-                    <td><button class="chalpl0" @click="enterNorChal(1)" :class="getChalClass(1)">挑战1<br>1-8维度的增长速度为原来的^2<br>奖励：你可以提升维度1自动购买器的间隔</button></td>
-                    <td><button class="chalpl0" @click="enterNorChal(2)" :class="getChalClass(2)" style="font-size: 11px">挑战2<br>2-8维度指数为0，但2-8维度的指数随着在这一次维度提升所经过的时间而增加（最高0.7），第1维度指数为1.5,在维度提升>3后第一维度指数为3,2-8维度指数上限0.8<br>奖励：你可以提升维度2自动购买器的间隔</button></td>
-                    <td><button class="chalpl0" @click="enterNorChal(3)" :class="getChalClass(3)">挑战3<br>你只能购买前6个维度,第1维度指数为1.1<br>奖励：解锁自动mm<sup>3</sup>重置。你可以提升自动维度提升的间隔</button></td>
+                    <td><button class="chalpl0" @click="enterNorChal(1)" :class="getChalClass(1)">挑战1<br>1-8维度的增长速度为原来的^2<br>奖励：获得×1.02多的购买次数</button></td>
+                    
                 </tr>
             </table>
         </div>
@@ -81,7 +96,7 @@
         </div>
         <div v-if="player.currentPage == 8" class="text-center">
             <div v-html="getAutomationTabDetail()"></div>
-            <button class="btn" v-if="player.PL1chal.includes(3)" @click="toggleAutobuyer(10)">
+            <button class="btn" v-if="hasMM3Upg(7)" @click="toggleAutobuyer(10)">
                 自动mm<sup>3</sup>重置: {{player.auto.includes(10) ? "开" :
                 "关"}}
             </button>
@@ -96,15 +111,20 @@
                 </tr>
                 <tr>
                     <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(5)}" @click="buyMM3Upg(5)">你可以最大化维度提升<br>花费：15 mm<sup>3</sup></button></td>
-                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(6)}" @click="buyMM3Upg(6)">每次重置开始于10维度提升，1-5维度自动购买器间隔总是为0ms<br>花费：25 mm<sup>3</sup></button></td>
-                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(7)}" @click="buyMM3Upg(7)">每次重置开始于35维度提升，6-8维度自动购买器间隔总是为0ms<br>花费：40 mm<sup>3</sup></button></td>
-                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(8)}" @click="buyMM3Upg(8)">在此页面解锁购买项<br>花费：60 mm<sup>3</sup></button></td>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(6)}" @click="buyMM3Upg(6)">每次重置开始于10维度提升<br>花费：25 mm<sup>3</sup></button></td>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(7)}" @click="buyMM3Upg(7)">每次重置开始于35维度提升，解锁自动mm<sup>3</sup>重置<br>花费：40 mm<sup>3</sup></button></td>
+                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(8)}" @click="buyMM3Upg(8)">解锁一个双倍mm<sup>3</sup>获取的可购买<br>花费：60 mm<sup>3</sup></button></td>
                 </tr>
                 <tr>
                     <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(9)}" @click="buyMM3Upg(9)">维度提升不重置任何东西<br>花费：95 mm<sup>3</sup></button></td>
-                    <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(10)}" @click="buyMM3Upg(10)">你可以提升自动mm<sup>3</sup>重置的间隔<br>花费：240 mm<sup>3</sup></button></td>
-                    <td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
-                    <td><button class="mm3upg" v-if="player.PL1autoupgMM3RESET==7" :class="{unlocked: hasMM3Upg(11)}" @click="buyMM3Upg(11)">取消4维体积在1.000e200的硬上限（转为软上限）<br>花费：0 mm<sup>3</sup></button></td>
+                    
+                    <td><button class="mm3upg" v-if="hasMM3Upg(11)" :class="{unlocked: hasMM3Upg(12)}" @click="buyMM3Upg(12)">基于现在的的mm<sup>3</sup>数量给1-8维度提升<br>花费：5.000e17 mm<sup>3</sup></button></td><td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
+                </tr>
+                <tr v-if="player.PL1xiaopengyouUnl">
+                    <td>
+                        <button class="mm3upg" :class="{unlocked: hasMM3Upg(13)}" @click="buyMM3Upg(13)">在"维度提升"页面解锁"维度提升^2"<br>花费：2000 小朋友</button>
+                    </td>
+                    
                 </tr>
                 <tr>
                     <td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
@@ -113,7 +133,12 @@
                     <td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
                     <td v-if="hasMM3Upg(8)"><button class="mm3upg" @click="buyBuyable(1)">双倍mm<sup>3</sup>获取({{ formatWhole(player.PL1buyable1) }})<br>花费：{{format(getBuyableCost(1))}} mm<sup>3</sup><br>效果: ×{{format(getBuyableEffect(1))}}</button></td>
                     <td v-else><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
-                    <td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
+                    <td v-if="player.PL1xiaopengyouUnl"><button class="mm3upg" @click="buyBuyable(2)">
+                        双倍小朋友获取({{ formatWhole(player.PL1buyable2) }})<br>花费：{{format(getBuyableCost(2))}} 小朋友<br>效果: ×{{format(getBuyableEffect(2))}}</button>
+                    </td>
+                    <td v-else><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
+
+                    
                     <td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
                 </tr>
             </table>
@@ -144,8 +169,9 @@
                     format(player.dimensions[DIMENSIONS_BOUGHT][dim.id
                     - 1]) }}
                 </span>
-                <button class="btn" :disabled="!buyable(dim.id)" @click="buydim(dim.id)">价格:
-                    {{format(player.dimensions[DIMENSIONS_COST][dim.id - 1 ])}} mm<sup>4</sup></button>
+                <button class="btn" :disabled="!buyable(dim.id)" @click="buydim(dim.id)" v-html="display4DDimCost(dim.id)">价格:
+                    {{format(player.dimensions[DIMENSIONS_COST][dim.id - 1 ])}} mm<sup>4</sup>
+                </button>
                 <!-- <button class="btn" :disabled="!buyable(dim.id)" @click="buydim(dim.id)">
                         Cost: <span v-html="format(player.dimensions[DIMENSIONS_COST][dim.id
                             - 1])"></span>
@@ -154,9 +180,6 @@
                         自动: {{player.auto.includes(dim.id) ? "开" :
                         "关"}}
                     </button>
-            </div>
-            <div style="color: red" v-if="tmp.mm4.softcapped1">
-                因为4维体积获取超过了 <b v-html="format(tmp.mm4.softcap1start)"></b> mm<sup>4</sup> 每秒，因此4维体积获取将被软上限限制！
             </div>
         </div>
 
@@ -223,11 +246,16 @@
         </div>
         <div v-if="player.currentPage == 4" class="text-center">
             <div>
-                <p>维度提升({{format(player.dimBoost)}})</p>
+                <p>维度提升({{format(player.dimBoost)}},{{format(getRealDimBoost())}})</p>
                 <button class="btn" @click="dimBoost" v-html="dimBoostDescription()"></button><br>
                 <button class="btn" v-if="hasMM3Upg(3)" @click="toggleAutobuyer(9)">
                     自动: {{player.auto.includes(9) ? "开" :
                     "关"}}
+                </button>
+            </div>
+            <div v-if="hasMM3Upg(13)">
+                <p>维度提升^2({{format(player.dimBoost2)}})</p>
+                <button class="btn" @click="dimBoost2" v-html="dimBoost2Description()">
                 </button>
             </div>
             <div v-html="statBoosts()"></div>
@@ -254,6 +282,23 @@
             ">You doesn't have enough Infinity Points to buy a Tesseract</button><br><br><br>
             <div  style="
             animation: bigcrunch 2s infinite;">啊，我被大嘎吱嘎吱了，功力只剩一成</div>
+        </div>
+        <div v-if="player.currentPage == 1187090311" class="text-center">
+            20XX年，邪恶博士XXX(代号:1187)宣称自己掌握了可以毁灭宇宙的技术，同时也放出了<br>
+            一张被挑战书，被挑战书（破损）的内容如下：<br>
+            <div style="width: 500px; height: 707.1067811865476px; border: #fff solid 2px; margin: auto;">
+                <h1 style="font-size: 1cm">被挑战书</h1>
+                <p style="text-indent: 2em; text-align: left;">
+                    我乃<br><br><br><br>若你欲成挑战者，请联系130<br><br><br><br><br>&nbsp;&nbsp;&nbsp;&nbsp;不要贸然挑战我，否则后果自负<br><br><br><br>
+                </p>
+                <p style="text-align: right;">XXX&nbsp;<br>20XX年3月1日</p>
+            </div>
+            在被挑战书放出后几年，1187组织有一人叛变，向【数据删除】报告了被挑战书的完整内容，<br>也报告了挑战地方的位置。<br>
+            在进入了挑战位置后，在挑战房间角落找到了一张"前人"留下的纸条：<div class="backgroundsettingnote" @click="enterFinalChallenge()">
+                不仅只有这一个房间，&nbsp;&nbsp;还有无数个&nbsp;&nbsp;房间...<br><br>
+                还有最终挑&nbsp;&nbsp;战...K...一&nbsp;&nbsp;...E...十...四...
+
+            </div><br>
         </div>
     </div>
 </body>

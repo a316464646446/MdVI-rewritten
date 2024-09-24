@@ -99,6 +99,11 @@ var tabShow = {
             class: "mm3btn",
             text: "挑战"
         },
+        xiaopengyou: {
+            id: 10,
+            class: "mm3btn",
+            text: "小朋友"
+        },
         get class(){
             return "mm3btn "+(
                 player.PL1autoupgMM3RESET==7 && !player.PL1breakedPL1limit ? "breakable" : ""
@@ -118,6 +123,10 @@ var tabShow = {
         about: {
             id: 3,
             text: "关于"
+        },
+        backgroundSettings: {
+            id: 11,
+            text: "概要"
         }
     },
     test: {
@@ -218,4 +227,11 @@ function formatEndgame() {
     const x = getUndulatingColor()
     const endgameText = "当前Endgame：" + colorText('b', x, Endgame.format()) + " mm<sup>4</sup>"
     return endgameText
+}
+function display4DDimCost(dimid) {
+    if (player.PL1breakedPL1limit){
+        return `购买次数：${format(player.dimensions[DIMENSIONS_BOUGHT][dimid - 1 ])}`
+    }else{
+        return `价格: ${format(player.dimensions[DIMENSIONS_COST][dimid - 1 ])} mm<sup>4</sup>`
+    }
 }

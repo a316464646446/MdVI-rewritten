@@ -57,6 +57,12 @@ function hardReset() {
 
         PL1breakedPL1limit: false,
 
+        PL1xiaopengyouUnl: false,
+
+        PL1xiaopengyouPoints: E(0),
+        PL1buyable2: E(0),
+
+        dimBoost2: E(0),
         automationState: {
             
         }
