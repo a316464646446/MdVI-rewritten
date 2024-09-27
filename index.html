@@ -119,9 +119,7 @@
                 </tr>
                 <tr>
                     <td><button class="mm3upg" :class="{unlocked: hasMM3Upg(9)}" @click="buyMM3Upg(9)">维度提升不重置任何东西<br>花费：95 mm<sup>3</sup></button></td>
-                    
-                    <td><button class="mm3upg" v-if="hasMM3Upg(11)" :class="{unlocked: hasMM3Upg(12)}" @click="buyMM3Upg(12)">基于现在的的mm<sup>3</sup>数量给1-8维度提升<br>花费：5.000e17 mm<sup>3</sup></button></td><td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
-                </tr>
+               </tr>
                 <tr v-if="player.PL1xiaopengyouUnl">
                     <td>
                         <button class="mm3upg" :class="{unlocked: hasMM3Upg(13)}" @click="buyMM3Upg(13)">在"维度提升"页面解锁"维度提升^2"<br>花费：2,000 小朋友</button>
