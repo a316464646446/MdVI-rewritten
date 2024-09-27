@@ -1,5 +1,11 @@
 const changelog = [
     {
+        version: "2.1.3", title: "快来了",
+        changes: [
+            "添加了一些升级"
+        ]
+    },
+    {
         version: "2.1.2", title: "小朋友：啊米诺斯",
         changes: [
             "修改了部分游戏的效果",

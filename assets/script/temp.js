@@ -70,7 +70,7 @@ var tmp = {
         require(){
             let req =  E.pow(7,E.add(E.mul(player.dimBoost,4),36));
             if (hasMM3Upg(1)){
-                req = req.div("e10")
+                req = req.div(tmp.dimensionBoost.requireDivision())
             }
             return req;
         },
@@ -78,6 +78,10 @@ var tmp = {
             let req = E.pow(10,E.add(900,E.pow(E.mul(15,player.dimBoost2),2)))
 
             return req
+        },
+        requireDivision(){
+            
+            return E(1).mul(hasMM3Upg(1) ? "e10" : 1).mul(E.max(1,hasMM3Upg(16) ? player.PL1xiaopengyouPoints.pow(10) : 1))
         }
     },
     mm4: {
@@ -101,11 +105,8 @@ var tmp = {
     },
     mm3: {
         get gain(){
-            if (!player.PL1breakedPL1limit){
-                return E(1).mul(getBuyableEffect(1))
-            }else{
-                return E(player.volumes.div("1e100").root(100).div(10)).mul(getBuyableEffect(1)).floor()
-            }
+            return E(player.volumes.div("1e100").root(100).div(10)).mul(getBuyableEffect(1)).floor()
+            
         }
     }
 }

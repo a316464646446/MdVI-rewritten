@@ -5,6 +5,7 @@
 body{
     background-color: var(--color-text-invert);
     color: var(--color-text);
+    overflow: scroll;
 }
 button{
     background-color: var(--color-text-invert);
@@ -178,4 +179,21 @@ button{
 }
 .backgroundsettingnote:active{
     background: #666;
+}
+
+
+.mm5btn{
+    background-color: #044;
+    border-color: #088;
+}
+.mm5btn:hover{
+    background-color: #055;
+    border-color: #0aa;
+}
+.mm5btn[disabled]{
+    background-color: #022;
+    border-color: #044;
+}
+.mm5text{ 
+    color: #0dd;
 }

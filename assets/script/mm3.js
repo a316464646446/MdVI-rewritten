@@ -1,6 +1,10 @@
 const mm3UpgradeCost = [
     1, 1, 3, 10, 15, 25, 40, 60, 95, 240, 0, "5e17",
-    2000
+    2000, 10000, 50000, 300000, 700000, "1e6", "2e6", "2e11"
+]
+
+const mm3ChallengeGoal = [
+    E("1e200"), E("1e200"), E("1e700")
 ]
 function hasMM3Upg(x){
     return player.PL1upgrades.includes(x)
@@ -26,9 +30,10 @@ function fixInfinity(){
             player.PL1breakedPL1limit = true
         }
     }
-    if (player.volumes.gte(mm3Require) && !player.PL1breakedPL1limit){
-        player.volumes = mm3Require.clone();
+    if (player.volumes.gte(mm3ChallengeGoal[player.PL1inchal]) && !player.PL1breakedPL1limit){
+        player.volumes = mm3ChallengeGoal[player.PL1inchal].clone();
     }
+    player.PL1chal = [...(new Set(player.PL1chal))]
 }
 
 function norewardMM3reset(){
@@ -71,7 +76,7 @@ function enterNorChal(x){
 }
 function exitChal(){
     if (player.PL1inchal != 0){
-        if (player.volumes.gte(mm3Require)){
+        if (player.volumes.gte(mm3ChallengeGoal[player.PL1inchal])){
             player.PL1chal.push(player.PL1inchal);
             doMM3reset();
             
@@ -104,7 +109,7 @@ function getBuyableCost(x){
         return softcap(E(7).pow(player.PL1buyable1),7**18,2,"pow")
     }
     if (x==2){
-        return E(14).pow(player.PL1buyable2)
+        return E(12).pow(player.PL1buyable2)
     }
 }
 function getBuyableEffect(x){
@@ -118,11 +123,14 @@ function getBuyableEffect(x){
 function buyBuyable(x){
     switch(x){
         case 1:
-            if (player.PL1points.gte(getBuyableCost(1))){
+            if (player.PL1buyable1.lt(softcap(player.PL1points,7**18,0.5,"pow").logarithm(7).ceil())){
+                player.PL1buyable1 = softcap(player.PL1points,7**18,0.5,"pow").logarithm(7).floor();
                 player.PL1points = player.PL1points.sub(getBuyableCost(1))
                 player.PL1buyable1 = player.PL1buyable1.add(1);
+
             }
             break;
+
             
         case 2:
             if (player.PL1xiaopengyouPoints.gte(getBuyableCost(2))){
@@ -139,9 +147,21 @@ function unlockXiaopengyou(){
     }
 }
 function getXiaopengyouGain(){
-    return E(1).mul(getBuyableEffect(2)).mul(
+    let temp1 = E(1)
+    temp1 = temp1.mul(getBuyableEffect(2))
+    temp1 = temp1.mul(
         player.dimBoost2.gte(2) ? dimBoostReward2[1].effect() : 1
     )
+    temp1 = temp1.mul(
+        hasMM3Upg(15) ? player.PL1xiaopengyouPoints.log(Math.E).max(1) : 1
+    )
+    temp1 = temp1.mul(
+        hasMM3Upg(18) ? player.volumes.logarithm(14).logarithm(7).max(1) : 1
+    )
+    temp1 = temp1.mul(
+        hasMM3Upg(19) ? player.PL1points.logarithm("1e10").max(1) : 1
+    )
+    return temp1
 }
 function xiaopengyouLoop(){
     if (player.PL1xiaopengyouUnl){
@@ -155,5 +175,13 @@ function xiaopengyouEffect1(){
 }
 
 function xiaopengyouEffect2(){
-    return player.PL1xiaopengyouPoints.gte(1000) ? player.PL1xiaopengyouPoints.logarithm(7).max(0):0
+    return player.PL1xiaopengyouPoints.gte(1000) ? (
+
+        player.PL1chal.includes(2) ?
+        player.PL1xiaopengyouPoints.root(5)  :
+        player.PL1xiaopengyouPoints.logarithm(7)
+    
+    ).max(0)
+    
+    :0
 }

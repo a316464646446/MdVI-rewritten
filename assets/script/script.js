@@ -42,13 +42,8 @@ function updateAuto() {
 }*/
 
 function buyable(dim) {
-    if (player.PL1inchal == 3){
-        if (dim > 6){
-            return false
-        }
-    }
     let temp1 = player.dimensions[DIMENSIONS_COST][dim - 1]
-    if (player.volumes.gte(mm3Require)  && !player.PL1breakedPL1limit){
+    if (player.volumes.gte(mm3ChallengeGoal[player.PL1inchal]) && !player.PL1breakedPL1limit){
         return false
     }
     if (player.PL1breakedPL1limit){
@@ -96,11 +91,6 @@ function updateDimensionData() {
 }
 const dimBasePrice=[7,7**2,7**3,7**4,7**5,7**6,7**7,7**8]
 function calc_cost(dimid, count) {
-    if (player.PL1inchal == 3){
-        if (dimid > 6-1){
-            return K9E15
-        }
-    }
     if (player.PL1breakedPL1limit){
         return K9E15
     }
@@ -115,7 +105,7 @@ function updateVolumes() {
     player.volumes = player.volumes.add(tmp.mm4.gain.mul(globalDiff))
 }
 function buydim(dim, single = false) {
-    if (player.PL1breakedPL1limit){
+    if (player.PL1breakedPL1limit || (player.PL1inchal!=1)){
         let buycountTotal = tmp.dimension.getBoughtDimsAftere400(dim);
         let boughtNow = player.dimensions[DIMENSIONS_BOUGHT][dim - 1];
         if (buycountTotal.gt(boughtNow)){

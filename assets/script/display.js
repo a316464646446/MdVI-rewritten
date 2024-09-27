@@ -105,9 +105,7 @@ var tabShow = {
             text: "小朋友"
         },
         get class(){
-            return "mm3btn "+(
-                player.PL1autoupgMM3RESET==7 && !player.PL1breakedPL1limit ? "breakable" : ""
-            )
+            return "mm3btn "
         } ,
         unlocked() {
             return player.isPL1unlocked;
@@ -229,7 +227,7 @@ function formatEndgame() {
     return endgameText
 }
 function display4DDimCost(dimid) {
-    if (player.PL1breakedPL1limit){
+    if (player.PL1breakedPL1limit  || (player.PL1inchal!=1)){
         return `购买次数：${format(player.dimensions[DIMENSIONS_BOUGHT][dimid - 1 ])}`
     }else{
         return `价格: ${format(player.dimensions[DIMENSIONS_COST][dimid - 1 ])} mm<sup>4</sup>`

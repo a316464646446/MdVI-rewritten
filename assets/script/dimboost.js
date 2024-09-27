@@ -4,7 +4,7 @@ function dimBoost() {
             player.dimBoost = player.dimBoost.add(1)
         }else{
             player.dimBoost = E.max(player.dimBoost,
-                player.volumes.mul("1e10").logarithm(7).sub(36).div(4).ceil() 
+                player.volumes.mul(tmp.dimensionBoost.requireDivision()).logarithm(7).sub(36).div(4).ceil() 
             )
         }
         if (!hasMM3Upg(9)){
@@ -19,7 +19,11 @@ function dimBoost() {
     }
 }
 function getRealDimBoost(){
-    return player.dimBoost.add(xiaopengyouEffect2())
+    let temp1 = player.dimBoost.add(xiaopengyouEffect2())
+    if (player.PL1inchal==2){
+        temp1 = temp1.mul(0.1)
+    }
+    return temp1
 }
 function getDimBoughts() {
     let x = E(0);
@@ -87,12 +91,19 @@ const dimBoostReward=[
     },
     {//[7]
         req: E(23),
-        desc: "每一个维度提升使所有维度×1.3",
+        get desc(){ 
+            return "每一个维度提升使所有维度×"+format(this.base) 
+        },
         effect() {
-            return E.pow(1.3,getRealDimBoost())
+            return E.pow(this.base,getRealDimBoost())
         },
         get effectDisplay() {
             return "×"+format(this.effect())
+        },
+        get base(){
+            let base = E(1.3);
+            if (hasMM3Upg(17)) base=base.mul(player.PL1xiaopengyouPoints.logarithm(7).logarithm(7).mul(1.3).max(1));
+            return base;
         }
     }
 ]
