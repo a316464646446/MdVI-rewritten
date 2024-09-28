@@ -8,6 +8,8 @@
     <title>M-dimensional Volume Incremental Rewritten</title>
     <link href="./assets/style/core.css" rel="stylesheet">
 
+    
+    <script src="./assets/script/loader.js" defer></script>
     <script src="./assets/script/technical/vue.min.js" defer></script>
     <script src="./assets/script/technical/ExpantaNum.js" defer></script>
     <script src="./assets/script/technical/format_expantanum.js" defer></script>
@@ -28,6 +30,8 @@
     <script src="./assets/script/mm3.js" defer></script>
     <script src="./assets/script/automation.js" defer></script>
 
+    <script src="./assets/script/PL2/mm5.js" defer></script>
+
 </head>
 
 <body>
@@ -46,6 +50,15 @@
                 <button class="btn mm3btn" @click="doMM3resetManmade()">重置1-8维度，4维体积，维度提升，获得{{format(tmp.mm3.gain)}} mm<sup>3</sup> 3维体积</button>
             </div>
             <div v-if="player.isPL1unlocked" class="mm3text text-center">你有{{format(player.PL1points)}} mm<sup>3</sup> 3维体积</div>
+            <div v-if="player.isPL2unlocked" class="mm5text text-center">你有{{format(player.PL2points)}} mm<sup>5</sup> 5维体积</div>
+            <div v-if="showAllPrestigeLayers">
+                <div class="mm6text text-center">你有0.00 mm<sup>6</sup> 6维体积</div>
+                <div class="mm7text text-center">你有0.00 mm<sup>7</sup> 7维体积</div>
+                <div class="mm8text text-center">你有0.00 mm<sup>8</sup> 8维体积</div>
+                <div class="mm9text text-center">你有0.00 mm<sup>9</sup> 9维体积</div>
+                <div class="mm10text text-center">你有0.00 mm<sup>10</sup> 10维体积</div>
+                
+            </div>
             <div v-if="isEndgame()" :style="{color: getUndulatingColor()}" class="text-center">已达到当前版本终点！</div>
         </div>
         <div class="main-line"></div>
@@ -93,7 +106,7 @@
         </div>
         <div v-if="player.currentPage == 9" class="text-center">
             <button class="btn mm3btn" @click="doMM3resetManmade()">重置1-8维度，4维体积，维度提升，获得{{format(tmp.mm3.gain)}} mm<sup>3</sup> 3维体积<br>需要 1.000e200 mm<sup>4</sup></button>
-            <button class="btn mm5btn" v-if="hasMM3Upg(20)">重置4维和3维的所有资源和升级，获得??? mm<sup>5</sup> 5维体积<br>需要 1e100,000 mm<sup>4</sup></button>
+            <button class="btn mm5btn" @click="doMM5resetManmade()" v-if="hasMM3Upg(20)">重置4维和3维的所有资源和升级，获得{{format(tmp.mm5.gain)}} mm<sup>5</sup> 5维体积<br>需要 1e100,000 mm<sup>4</sup></button>
             
         </div>
         <div v-if="player.currentPage == 8" class="text-center">
@@ -323,6 +336,19 @@
                 还有最终挑&nbsp;&nbsp;战...K...一&nbsp;&nbsp;...E...十...四...
 
             </div><br>
+        </div>
+        <div v-if="player.currentPage == 11870502" class="text-center">
+            <p>当你第一次达到break-eternity极限时，会发生某些意想不到的事...</p>
+            计划目标<br>
+            mm3before: 0<br>
+            mm3: e200<br>
+            mm5: e100000<br>
+            mm6: e1e11<br>
+            mm7: e1.7e723<br>
+            mm8: ee9.25e9<br>
+            mm9: ee1e8000<br>
+            mm10: 1f7<br>
+            mm11: f1.797e308<br>
         </div>
     </div>
 </body>

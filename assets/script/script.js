@@ -24,6 +24,7 @@ function loop(){
 function updateTime(){
     player.dimBoostTimespent = player.dimBoostTimespent+globalDiff;
     player.PL1Timespent = player.PL1Timespent+globalDiff;
+    player.PL2Timespent = player.PL2Timespent+globalDiff;
 }
 /*
 function updateAuto() {
@@ -151,13 +152,6 @@ function toggleAutobuyer(i) {
     }
 }
 
-(function() {
-    document.addEventListener('DOMContentLoaded', function(e) {
-        load(e);
-        window.loopVal = setInterval(loop, 1000/30)
-        window.saveVal = setInterval(save, 1000);
-    });
-})();
 
 function isEndgame(){
     return player.volumes.gt(Endgame)
@@ -179,4 +173,18 @@ function enterFinalChallenge(){
     }else{
         alert("经过推测，进入最终挑战需要约K1.000e14个某个资源，现在你还没有能力实现...")
     }
+}
+
+(function() {
+    document.addEventListener('DOMContentLoaded', function(e) {
+        load(e);
+        window.loopVal = setInterval(loop, 1000/30)
+        window.saveVal = setInterval(save, 1000);
+    });
+})();
+
+var showAllPrestigeLayers = false;
+
+if (location.host.includes("127.0.0.1")){
+    showAllPrestigeLayers = true;
 }

@@ -34,7 +34,7 @@ var tabShow = {
                 subtabIDList.push(this[primaryTab][key].id)
             }
         }
-        return subtabIDList.includes(player.currentPage)
+        return subtabIDList.includes(player.currentPage) || player.currentPage == this[primaryTab].firstTabID
     },
     inSecondaryTab(primaryTab, secondaryTab) {
         return player.currentPage == this[primaryTab][secondaryTab].id
@@ -108,7 +108,74 @@ var tabShow = {
             return "mm3btn "
         } ,
         unlocked() {
-            return player.isPL1unlocked;
+            return player.isPL1unlocked || howAllPrestigeLayers;
+        }
+    },
+    mm5: {
+        text: "5维体积",
+        firstTabID: 12,
+        
+        class: "mm5btn",
+        unlocked() {
+            return player.isPL2unlocked || howAllPrestigeLayers
+        }
+    },
+    mm6: {
+        text: "6维体积",
+        firstTabID: -999,
+        
+        class: "mm6btn",
+        unlocked() {
+            return showAllPrestigeLayers
+        }
+    },
+    mm7: {
+        text: "7维体积",
+        firstTabID: -998,
+        
+        class: "mm7btn",
+        unlocked() {
+            return showAllPrestigeLayers
+        }
+    },
+    mm8: {
+        text: "8维体积",
+        firstTabID: -997,
+        
+        class: "mm8btn",
+        unlocked() {
+            return showAllPrestigeLayers
+        }
+    },
+    mm9: {
+        text: "9维体积",
+        firstTabID: -996,
+        
+        class: "mm9btn",
+        unlocked() {
+            return showAllPrestigeLayers
+        }
+    },
+    mm10: {
+        text: "10维体积",
+        firstTabID: -995,
+        
+        class: "mm10btn",
+        unlocked() {
+            return showAllPrestigeLayers
+        }
+    },
+    mm11evolution: {
+        text: "11维体积",
+        firstTabID: 11870502,
+        evolue:{
+            id: 11870502,
+            text: "商店",
+            class: "evolue",
+        },
+        class: "evolue",
+        unlocked() {
+            return showAllPrestigeLayers
         }
     },
     settings: {

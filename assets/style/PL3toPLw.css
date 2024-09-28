@@ -1,0 +1,107 @@
+.mm6btn {
+    background-color: #404;
+    border-color: #808;
+}
+
+.mm6btn:hover {
+    background-color: #505;
+    border-color: #a0a;
+}
+
+.mm6btn[disabled] {
+    background-color: #202;
+    border-color: #404;
+}
+.mm6text{ 
+    color: #d0d
+}
+
+
+.mm7btn{
+    background-color: #004;
+    border-color: #008;
+}
+.mm7btn:hover{
+    background-color: #005;
+    border-color: #00a;
+}
+.mm7btn[disabled]{
+    background-color: #002;
+    border-color: #004;
+}
+
+.mm7text{ 
+    color: #00d
+}
+
+
+
+
+.mm8btn{
+    background-color: #400;
+    border-color: #800;
+}
+.mm8btn:hover{
+    background-color: #500;
+    border-color: #a00;
+}
+.mm8btn[disabled]{
+    background-color: #200;
+    border-color: #400;
+}
+.mm8text{
+    color: #d00
+}
+
+.mm9btn{
+    border-color: #840;
+    background-image: linear-gradient(to right, #000,#420, #000);
+    border: var(--text-color-invert) 2px solid;
+}
+.mm9btn:hover{
+    background-image: linear-gradient(to right, #000,#552a00, #000);
+    border-color: #a50;
+    border: var(--text-color-invert) 2px solid;
+}
+.mm9btn[disabled]{
+    background-image: linear-gradient(to right, #000,#210, #000);
+    border-color: #420;
+    border: var(--text-color-invert) 2px solid;
+}
+.mm9text{
+    color: transparent;
+    background: linear-gradient(to right, #000,#dd6800, #000);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.mm10btn{
+    background-color: #024;
+    border-color: #048;
+}
+.mm10btn:hover{
+    background-color: #002A55;
+    border-color: #05A;
+}
+.mm10btn[disabled]{
+    background-color: #012;
+    border-color: #024;
+}
+
+.mm10text{
+    color: #0068dd
+}
+
+
+.evolue{
+    background-image: linear-gradient(to right, #000,#888, #000);
+    border: var(--text-color-invert) 2px solid;
+}
+.evolue:hover{
+    background-image: linear-gradient(to right, #000,#ccc, #000);
+    border: var(--text-color-invert) 2px solid;
+}
+.evolue[disabled]{
+    background-image: linear-gradient(to right, #000,#444, #000);
+    border: var(--text-color-invert) 2px solid;
+}

@@ -161,6 +161,10 @@ function getXiaopengyouGain(){
     temp1 = temp1.mul(
         hasMM3Upg(19) ? player.PL1points.logarithm("1e10").max(1) : 1
     )
+
+    if (player.PL1xiaopengyouPoints.gte(tmp.mm3.xiaopengyouCap())){
+        temp1 = E(0)
+    }
     return temp1
 }
 function xiaopengyouLoop(){

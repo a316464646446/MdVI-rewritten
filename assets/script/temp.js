@@ -107,6 +107,16 @@ var tmp = {
         get gain(){
             return E(player.volumes.div("1e100").root(100).div(10)).mul(getBuyableEffect(1)).floor()
             
+        },
+
+
+        xiaopengyouCap(){
+            return 2e12
+        }
+    },
+    mm5: {
+        get gain(){
+            return E(player.volumes.div("1e35000").root(65000).div(10)).floor()
         }
     }
 }
