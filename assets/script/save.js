@@ -65,9 +65,13 @@ function hardReset() {
         dimBoost2: E(0),
         automationState: {
             
-        }
+        },
 
-
+        PL2points: E(0),
+        isPL2unlocked: false,
+        PL2times: E(0),
+        PL2total: E(0),
+        PL2Timespent: 0,
 
     }
 }
@@ -165,7 +169,7 @@ function exportFile() {
     window.URL = window.URL || window.webkitURL;
     let a = document.createElement("a")
     a.href = window.URL.createObjectURL(file)
-    a.download = "Points Incremental Save - " + getCurrentBeijingTime() + ".txt"
+    a.download = "Mdv Incremental Save - " + getCurrentBeijingTime() + ".txt"
     a.click()
 }
   
