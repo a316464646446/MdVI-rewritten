@@ -1,5 +1,12 @@
 const changelog = [
     {
+        version: "2.1.4", title: "快来了吗？",
+        changes: [
+            "修复了howAllPrestigeLayers的bug",
+            "添加了对维度的超级折算"
+        ]
+    },
+    {
         version: "2.1.3", title: "快来了",
         changes: [
             "添加了一些升级"

@@ -108,7 +108,7 @@ var tabShow = {
             return "mm3btn "
         } ,
         unlocked() {
-            return player.isPL1unlocked || howAllPrestigeLayers;
+            return player.isPL1unlocked || showAllPrestigeLayers;
         }
     },
     mm5: {
@@ -117,7 +117,7 @@ var tabShow = {
         
         class: "mm5btn",
         unlocked() {
-            return player.isPL2unlocked || howAllPrestigeLayers
+            return player.isPL2unlocked || showAllPrestigeLayers
         }
     },
     mm6: {
