@@ -23,6 +23,7 @@ function getRealDimBoost(){
     if (player.PL1inchal==2){
         temp1 = temp1.mul(0.1)
     }
+    temp1 = softcap(temp1,5e4,0.5,"pow")
     return temp1
 }
 function getDimBoughts() {
