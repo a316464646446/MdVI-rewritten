@@ -73,6 +73,10 @@ function hardReset() {
         PL2total: E(0),
         PL2Timespent: 0,
 
+
+        PL2inchallenge: 0,
+        PL2chal: [],
+
     }
 }
 

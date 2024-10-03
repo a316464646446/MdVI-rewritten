@@ -95,14 +95,6 @@ function getChalClass(x){
         }
     }
 }
-function displayChallenge(){
-    if (player.PL1inchal == 0){
-        return "你当前不在任何挑战中"
-    }else{
-        return "你当前在挑战"+player.PL1inchal.toString()+"中"
-
-    }
-}
 
 function getBuyableCost(x){
     if (x==1){

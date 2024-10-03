@@ -110,15 +110,25 @@ button{
     background: #080;
 }
 
-.chalpl0{
+.chalpl0, .chalpl1, .chalpl2{
+    color: #ffffff;
     width: 200px;
     height: 124px;
-    color: #ffffff;
-    border: 4px solid #ffffff;
-    font-family: MonospaceTypewriter;
     font-size: 13px;
     text-decoration: none;
     cursor: pointer;
+}
+.chalpl0{
+    border: 4px solid #fff;
+    
+}
+.chalpl1{
+    
+    border: 4px solid #dddd00;
+}
+.chalpl2{
+    
+    border: 4px solid #0dd;
 }
 .inchal{
     background: #558;
@@ -196,4 +206,16 @@ button{
 }
 .mm5text{ 
     color: #0dd;
+}
+
+
+.mm5upg {
+    width: 184px;
+    height: 136px;
+
+    color: #ffffff;
+    border: 2px solid #0dd;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
 }

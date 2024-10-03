@@ -1,3 +1,4 @@
+
 function getEnglishNumberOrdinal(num){
     if (num < 1 || Number.isNaN(num) || !Number.isFinite(num)){
         throw RangeError("ordinal number cannot be less than 1, NaN, or Infinity");
@@ -114,7 +115,11 @@ var tabShow = {
     mm5: {
         text: "5维体积",
         firstTabID: 12,
-        
+        upgradestoo: {
+            id: 12,
+            class: 'mm5btn',
+            text: "你没看错，还是升级"
+        },
         class: "mm5btn",
         unlocked() {
             return player.isPL2unlocked || showAllPrestigeLayers
@@ -123,7 +128,11 @@ var tabShow = {
     mm6: {
         text: "6维体积",
         firstTabID: -999,
-        
+        "6dfractal": {
+            id: -999,
+            text: "6D分型",
+            class: "mm6btn"
+        },
         class: "mm6btn",
         unlocked() {
             return showAllPrestigeLayers
@@ -149,7 +158,7 @@ var tabShow = {
     },
     mm9: {
         text: "9维体积",
-        firstTabID: -996,
+        firstTabID: 9006,
         
         class: "mm9btn",
         unlocked() {

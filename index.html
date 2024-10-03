@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-
+<!-- "huinveruifjmsadopwd" -->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -45,7 +45,7 @@
             <div v-if="player.volumes.gte('1e200') && !player.isPL1unlocked" class="text-center">你需要???才能走得更远！
 
             </div>
-            <div v-if="hasMM3Upg(4)" v-html="displayChallenge()" class="text-center"></div>
+            <div class="text-center"></div>
             <div v-if="player.volumes.gte(mm3ChallengeGoal[player.PL1inchal]) && !player.PL1breakedPL1limit" class="text-center">
                 <button class="btn mm3btn" @click="doMM3resetManmade()">重置1-8维度，4维体积，维度提升，获得{{format(tmp.mm3.gain)}} mm<sup>3</sup> 3维体积</button>
             </div>
@@ -77,6 +77,13 @@
             </button>
         </div>
         <div class="main-line"></div>
+        <div v-if="player.currentPage == 12">
+            <table>
+                <tr>
+                    <td><button class="mm5upg" :class="{unlocked: hasMM5Upg(1)}" @click="buyMM5Upg(1)"><br>花费：1 mm<sup>5</sup></button></td>
+                </tr>
+            </table>
+        </div>
         <div v-if="player.currentPage == 10">
             <div class="text-center" v-if="!player.PL1xiaopengyouUnl"><button class="btn mm3btn" @click="unlockXiaopengyou()">
                 解锁小朋友<br>
@@ -99,7 +106,7 @@
             <table>
                 <tr>
                     <td><button class="chalpl0" @click="enterNorChal(1)" :class="getChalClass(1)">挑战1<br>1-8维度的增长速度为原来的^2<br>目标: 1.000e200 mm<sup>4</sup><br>奖励：获得×1.02多的购买次数</button></td>
-                    <td><button class="chalpl0" @click="enterNorChal(2)" :class="getChalClass(2)" v-if="hasMM3Upg(14)">挑战2<br>维度提升实际数量为原来的0.1倍<br>目标: 1.000e700 mm<sup>4</sup><br>奖励：小朋友再次提升维度提升实际数量</button></td>
+                    <td><button class="chalpl1" @click="enterNorChal(2)" :class="getChalClass(2)" v-if="hasMM3Upg(14)">挑战2<br>维度提升实际数量为原来的0.1倍<br>目标: 1.000e700 mm<sup>4</sup><br>奖励：小朋友再次提升维度提升实际数量</button></td>
                     
                 </tr>
             </table>
@@ -339,6 +346,7 @@
         </div>
         <div v-if="player.currentPage == 11870502" class="text-center">
             <p>当你第一次达到break-eternity极限时，会发生某些意想不到的事...</p>
+            <p>你最高的mm<sup>4</sup>为114514mm<sup>4</sup></p>
             计划目标<br>
             mm3before: 0<br>
             mm3: e200<br>
@@ -349,6 +357,9 @@
             mm9: ee1e8000<br>
             mm10: 1f7<br>
             mm11: f1.797e308<br>
+        </div>
+        <div v-if="player.currentPage == 9006">
+
         </div>
     </div>
 </body>

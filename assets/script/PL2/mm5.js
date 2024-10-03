@@ -38,3 +38,6 @@ function doMM5resetManmade() {
         doMM5reset()
     }
 }
+
+function hasMM5Upg(){return false;}
+function buyMM5Upg(){}
