@@ -18,6 +18,7 @@ function loop(){
     mm3Loop();
     updateTime();
     xiaopengyouLoop();
+    battleLoop()
     player.time = thisFrame
     lastFrame = thisFrame;
 }
@@ -106,7 +107,7 @@ function updateVolumes() {
     player.volumes = player.volumes.add(tmp.mm4.gain.mul(globalDiff))
 }
 function buydim(dim, single = false) {
-    if (player.PL1breakedPL1limit || (player.PL1inchal!=1)){
+    if (player.PL1breakedPL1limit && (player.PL1inchal!=1)){
         let buycountTotal = tmp.dimension.getBoughtDimsAftere400(dim);
         let boughtNow = player.dimensions[DIMENSIONS_BOUGHT][dim - 1];
         if (buycountTotal.gt(boughtNow)){
@@ -158,7 +159,7 @@ function isEndgame(){
 }
 
 function softcap(value,start,power,mode,dis=false){
-    var x = value.clone()
+    var x = new PowiainaNum(value);
     if (!dis&&x.gte(start)) {
         if ([0, "pow"].includes(mode)) x = x.div(start).max(1).pow(power).mul(start)
         if ([1, "mul"].includes(mode)) x = x.sub(start).div(power).add(start)
@@ -168,11 +169,8 @@ function softcap(value,start,power,mode,dis=false){
 }
 
 function enterFinalChallenge(){
-    if (player.volumes.gte("J^99999999999998 (10{9})^8 (10{8})^8 (10{7})^8 (10{6})^8 (10{5})^8 (10^^^^)^8 (10^^^)^8 (10^^)^8 (10^)^8 10000000000")){
-        alert("请等待游戏更新!");
-    }else{
-        alert("经过推测，进入最终挑战需要约K1.000e14个某个资源，现在你还没有能力实现...")
-    }
+    alert("经过推测，进入最终挑战所需的某个数值超过了...，现在你还没有能力实现...\n但是请等待游戏更新")
+    
 }
 
 (function() {
@@ -184,7 +182,10 @@ function enterFinalChallenge(){
 })();
 
 var showAllPrestigeLayers = false;
-
+/*
 if (location.host.includes("127.0.0.1")){
     showAllPrestigeLayers = true;
-}
+}*/
+
+var A1to8 = [1,2,3,4,5,6,7,8];
+var A9to16 = [9,10,11,12,13,14,15,16]

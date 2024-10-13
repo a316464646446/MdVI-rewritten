@@ -11,7 +11,7 @@ var tmp = {
 
             let basebought = player.volumes.div(dimBasePrice[dim-1]).logarithm(this.getDimScale(dim));
             let finbought = E(1);
-            let e400Bought = ExpantaNum.div("e400",dimBasePrice[dim-1]).logarithm(this.getDimScale(dim));
+            let e400Bought = ExpantaNum.div("1e400",dimBasePrice[dim-1]).logarithm(this.getDimScale(dim));
             finbought = softcap(basebought, e400Bought, 0.5, "pow");
 
             finbought = finbought.add(1)
@@ -90,33 +90,47 @@ var tmp = {
             temp1 = temp1.mul(player.dimensions[DIMENSIONS_MULTI][0])
             temp1 = temp1.pow(player.dimensions[DIMENSIONS_EXPONENT][0])
 
-
+            if (player.PL2times.eq(1)){
+                temp1 = softcap(temp1,this.softcap1start,this.softcap1power)
+            }
             return temp1
         },
         get softcapped1(){
-            return false
+            return player.PL2times.eq(1) ? player.volumes.gte(this.softcap1start) : 0;
         },
         get softcap1power(){
-            return 1
+            return 0.9
         },
         get softcap1start(){
-            return K9E15
+            return new PowiainaNum("3.2050e1050")
         }
     },
     mm3: {
         get gain(){
-            return E(player.volumes.div("1e100").root(100).div(10)).mul(getBuyableEffect(1)).floor()
+            return E(player.volumes.div("1e100").root(100).div(10)).mul(getBuyableEffect(1)).mul(
+                player.PL2times.gte(2) ? 1000 : 1
+            ).floor()
             
         },
 
 
         xiaopengyouCap(){
-            return 2e12
+            let temp1 = new PowiainaNum(264454438000);
+
+            if (hasBattleUpgrade(1)){
+                temp1 = temp1.mul(getBattleUpgradeEffect(1));
+            }
+            return temp1;
         }
     },
     mm5: {
         get gain(){
-            return E(player.volumes.div("1e35000").root(65000).div(10)).floor()
+            return E(player.volumes.pow(2).div("1e35000").root(65000).div(10)).floor()
+        }
+    },
+    battle: {
+        get feature1Effect(){
+            return player.fillFeatureProgress1.max(1).logarithm(10).max(0).min(100000);
         }
     }
 }

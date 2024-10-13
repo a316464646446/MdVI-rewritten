@@ -15,6 +15,7 @@ function loadVue() {
               { id: 8, label: '第八维度' },
             ],
             isHoldMax: isHoldMax,
+            enemies,
         }
     })
 }

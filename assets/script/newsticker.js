@@ -54,6 +54,9 @@
         },
         {
             text: "你有10.000e19728风之微粒，就是这记数法怎么有点奇怪"
+        },
+        {
+            text: ""
         }
     ];
     textslength = texts.length;

@@ -1,6 +1,6 @@
 const mm3UpgradeCost = [
     1, 1, 3, 10, 15, 25, 40, 60, 95, 240, 0, "J^114514 19",
-    2000, 10000, 50000, 300000, 700000, "1e6", "2e6", "2e11"
+    2000, 10000, 50000, 300000, 700000, "1e6", "2e6", "7e9"
 ]
 
 const mm3ChallengeGoal = [
@@ -66,6 +66,11 @@ function doMM3resetManmade() {
 
 function mm3Loop(){
     player.PL1upgrades = [...(new Set(player.PL1upgrades))]
+    if (player.PL2times.gte(3)){
+        if (tmp.mm3.gain.gt(1)){
+            player.PL1points = player.PL1points.add(tmp.mm3.gain.pow(0.5).mul(globalDiff))
+        }
+    }
 }
 
 function enterNorChal(x){
@@ -134,7 +139,7 @@ function buyBuyable(x){
 }
 
 function unlockXiaopengyou(){
-    if (player.PL1points.gte("1e6")){
+    if (player.PL1points.gte(player.PL2times.gte(1) ? "1e3" : "1e6")){
         player.PL1xiaopengyouUnl = true
     }
 }
@@ -151,9 +156,14 @@ function getXiaopengyouGain(){
         hasMM3Upg(18) ? player.volumes.logarithm(14).logarithm(7).max(1) : 1
     )
     temp1 = temp1.mul(
-        hasMM3Upg(19) ? player.PL1points.logarithm("1e10").max(1) : 1
+        hasMM3Upg(19) ? player.PL1points.log10().div(10).max(1) : 1
     )
-
+    if (player.PL2times.gte(1)){
+        temp1 = temp1.mul(3.2050)
+    }
+    if (hasBattleUpgrade(1)){
+        temp1 = temp1.mul(getBattleUpgradeEffect(1));
+    }
     if (player.PL1xiaopengyouPoints.gte(tmp.mm3.xiaopengyouCap())){
         temp1 = E(0)
     }
@@ -163,6 +173,9 @@ function xiaopengyouLoop(){
     if (player.PL1xiaopengyouUnl){
         // globalDiff
         player.PL1xiaopengyouPoints = player.PL1xiaopengyouPoints.add(getXiaopengyouGain().mul(globalDiff))
+        if (player.PL1xiaopengyouPoints.gte(tmp.mm3.xiaopengyouCap())){
+            player.PL1xiaopengyouPoints = E(tmp.mm3.xiaopengyouCap());
+        }
     }
 }
 
@@ -171,13 +184,12 @@ function xiaopengyouEffect1(){
 }
 
 function xiaopengyouEffect2(){
-    return player.PL1xiaopengyouPoints.gte(1000) ? (
+    return softcap(player.PL1xiaopengyouPoints.gte(1000) ? (
 
         player.PL1chal.includes(2) ?
         player.PL1xiaopengyouPoints.root(5)  :
         player.PL1xiaopengyouPoints.logarithm(7)
     
-    ).max(0)
+    ):0,"1e5",0.5,"pow").max(0)
     
-    :0
 }

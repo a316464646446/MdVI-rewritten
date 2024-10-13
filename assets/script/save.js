@@ -4,30 +4,30 @@ var hasLoaded = {
 }
 function resetDimensions() {
     player.dimensions = [
-        [E(0), E(0), E(0), E(0), E(0), E(0), E(0), E(0)], //dimensions
-        [E(1), E(1), E(1), E(1), E(1), E(1), E(1), E(1)], //dimensions_multi
-        [E(0), E(0), E(0), E(0), E(0), E(0), E(0), E(0)], // dimensions_bought
+        [ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO], //dimensions
+        [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dimensions_multi
+        [ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO], // dimensions_bought
         [E(10), E(100), E(1000), E(1e4), E(1e5), E(1e6), E(1e7), E(1e8)],// dim_cost
-        [E(1), E(1), E(1), E(1), E(1), E(1), E(1), E(1)], //dim_exponent
-        [E(1), E(1), E(1), E(1), E(1), E(1), E(1), E(1)], //dim_doubleexponent
+        [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dim_exponent
+        [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dim_doubleexponent
     ]
 }
 function hardReset() {
     player = {
         version: 1,
         dimensions: [
-            [E(0), E(0), E(0), E(0), E(0), E(0), E(0), E(0)], //dimensions
-            [E(1), E(1), E(1), E(1), E(1), E(1), E(1), E(1)], //dimensions_multi
-            [E(0), E(0), E(0), E(0), E(0), E(0), E(0), E(0)], // dimensions_bought
+            [ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO], //dimensions
+            [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dimensions_multi
+            [ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO], // dimensions_bought
             [E(10), E(100), E(1000), E(1e4), E(1e5), E(1e6), E(1e7), E(1e8)],// dim_cost
-            [E(1), E(1), E(1), E(1), E(1), E(1), E(1), E(1)], //dim_exponent
-            [E(1), E(1), E(1), E(1), E(1), E(1), E(1), E(1)], //dim_doubleexponent
+            [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dim_exponent
+            [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dim_doubleexponent
         ],
         volumes: E(7),
         currentPage: 1,
         time: Date.now(),
 
-        dimBoost: E(0),
+        dimBoost: ExpantaNum.ZERO,
         dimBoostTimespent: 0,
 
         auto: [],
@@ -41,9 +41,9 @@ function hardReset() {
         // mm^3
         isPL1unlocked: false,
         PL1Timespent: 0,
-        PL1points: E(0),
-        PL1times: E(0),
-        PL1total: E(0),
+        PL1points: ExpantaNum.ZERO,
+        PL1times: ExpantaNum.ZERO,
+        PL1total: ExpantaNum.ZERO,
         PL1upgrades: [],
         PL1chal: [],
         PL1inchal: 0,
@@ -53,30 +53,54 @@ function hardReset() {
         PL1autoupgDIMBOOST:0,
         PL1autoupgMM3RESET: 0,
 
-        PL1buyable1: E(0),
+        PL1buyable1: ExpantaNum.ZERO,
 
         PL1breakedPL1limit: false,
 
         PL1xiaopengyouUnl: false,
 
-        PL1xiaopengyouPoints: E(0),
-        PL1buyable2: E(0),
+        PL1xiaopengyouPoints: ExpantaNum.ZERO,
+        PL1buyable2: ExpantaNum.ZERO,
 
-        dimBoost2: E(0),
+        dimBoost2: ExpantaNum.ZERO,
+        PL1dimensions: [
+            [ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO], //dimensions
+            [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dimensions_multi
+            [ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO], // dimensions_bought
+            [E(10), E(100), E(1000), E(1e4), E(1e5), E(1e6), E(1e7), E(1e8)],// dim_cost
+            [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dim_exponent
+            [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dim_doubleexponent
+        ],
         automationState: {
             
         },
 
-        PL2points: E(0),
+        PL2points: ExpantaNum.ZERO,
         isPL2unlocked: false,
-        PL2times: E(0),
-        PL2total: E(0),
+        PL2times: ExpantaNum.ZERO,
+        PL2total: ExpantaNum.ZERO,
         PL2Timespent: 0,
 
 
         PL2inchallenge: 0,
         PL2chal: [],
 
+        currentHP: ExpantaNum.ONE.clone(),
+        currentMP: ExpantaNum.ZERO.clone(),
+        currentDEF: ExpantaNum.ZERO.clone(),
+        currentATK: ExpantaNum.ONE.clone(),
+        currentAPS: ExpantaNum.ONE.clone(),
+
+        XP: ExpantaNum.ZERO.clone(),
+
+        currentFilling: [],
+
+        fillFeatureProgress1: PowiainaNum.ZERO.clone(),
+
+        enemyHPspent: ExpantaNum.ZERO.clone(),
+        currentBattlingEnemyId: -1,
+        
+        battleUpgrade: [],
     }
 }
 
@@ -123,9 +147,9 @@ function fixOldSave() {
 }
 function load(){
     hardReset();
-    let loadplayer = localStorage.getItem("vol-inc-rew");
+    let loadplayer = localStorage.getItem("vol-inc-rew-testPowiainaNum");
     if (loadplayer != null){
-        let loadplayer = formatsave.decode(localStorage.getItem("vol-inc-rew"));
+        let loadplayer = formatsave.decode(localStorage.getItem("vol-inc-rew-testPowiainaNum"));
         transformToE(loadplayer);
         deepCopyProps(loadplayer, player);
         fixOldSave();
@@ -245,7 +269,7 @@ function copyToFile(str,name) {
 
 
 function save() {
-    localStorage.setItem("vol-inc-rew", formatsave.encode(player))
+    localStorage.setItem("vol-inc-rew-testPowiainaNum", formatsave.encode(player))
 }
 function getCurrentBeijingTime() {
     const t = new Date,

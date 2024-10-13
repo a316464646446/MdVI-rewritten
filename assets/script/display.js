@@ -87,6 +87,23 @@ var tabShow = {
             return player.PL1breakedPL1limit
         }
     },
+    battle: {
+        text: "战斗场",
+        firstTabID: 13,
+        battle: {
+            text: "战斗界面",
+            
+            id: 13
+        },
+        enemy: {
+            text: "对方选择",
+            
+            id: 14
+        },
+        unlocked(){
+            return player.PL2times.gte(4)
+        }
+    },
     mm3: {
         text: "3维体积",
         firstTabID : 6,
@@ -118,11 +135,16 @@ var tabShow = {
         upgradestoo: {
             id: 12,
             class: 'mm5btn',
-            text: "你没看错，还是升级"
+            text: "里程碑"
         },
         class: "mm5btn",
         unlocked() {
-            return player.isPL2unlocked || showAllPrestigeLayers
+            if (showAllPrestigeLayers){
+                return true;
+            }
+            if (player.isPL2unlocked){
+                return true;
+            }
         }
     },
     mm6: {
@@ -213,7 +235,8 @@ var tabShow = {
         unlocked(){
             return location.host.includes("127.0.0.1")
         }
-    }
+    },
+
 };
 function primaryTabSort() {
     let result = [];
@@ -302,10 +325,20 @@ function formatEndgame() {
     const endgameText = "当前Endgame：" + colorText('b', x, Endgame.format()) + " mm<sup>4</sup>"
     return endgameText
 }
+function formatHardcap(){
+    const x = getUndulatingColor()
+    const endgameText = "数值非硬编码硬上限：" + colorText('b', x, PowiainaNum.MAX_POWIAINANUM_VALUE.format()+ "({10,9007199254740991,1,1,1,2})") 
+    return endgameText
+
+}
 function display4DDimCost(dimid) {
-    if (player.PL1breakedPL1limit  || (player.PL1inchal!=1)){
+    if (player.PL1breakedPL1limit  && (player.PL1inchal!=1)){
         return `购买次数：${format(player.dimensions[DIMENSIONS_BOUGHT][dimid - 1 ])}`
     }else{
         return `价格: ${format(player.dimensions[DIMENSIONS_COST][dimid - 1 ])} mm<sup>4</sup>`
     }
+}
+
+function dimensionsLabel(dimid){
+    return `第${dimid}维度`
 }

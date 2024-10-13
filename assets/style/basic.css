@@ -96,16 +96,6 @@ button{
     color: #dd0;
 }
 
-.mm3upg {
-    width: 184px;
-    height: 136px;
-
-    color: #ffffff;
-    border: 2px solid #dd0;
-    font-size: 16px;
-    text-decoration: none;
-    cursor: pointer;
-}
 .unlocked{
     background: #080;
 }
@@ -165,17 +155,6 @@ button{
     border-color: var(--color-text-invert);
     background-color: var(--color-text-invert);
 }
-.milestone{
-    
-    border: 2px solid;
-    
-    background-color: var(--color-text-invert);
-    height: 48px;
-    width: 958px;
-    padding: 6px 6px;
-    margin: 0px auto;
-    text-align: center;
-}
 
 .backgroundsettingnote {
     width: 250px;
@@ -209,6 +188,16 @@ button{
 }
 
 
+.mm3upg {
+    width: 184px;
+    height: 136px;
+
+    color: #ffffff;
+    border: 2px solid #dd0;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+}
 .mm5upg {
     width: 184px;
     height: 136px;
@@ -218,4 +207,59 @@ button{
     font-size: 16px;
     text-decoration: none;
     cursor: pointer;
+}
+a:-webkit-any-link{
+    color: #00ff00;
+}
+
+.milestone{
+    border: 2px solid;
+    
+    background-color: var(--color-text-invert);
+    height: fit-content;
+    width: 600px;
+    padding: 6px 6px;
+    margin: 0px auto;
+    text-align: center;
+    vertical-align: middle;
+    margin-top: 0.2cm;
+    margin-bottom: 0.2cm;
+
+}
+.milestone>.milestone-description{
+    font-size: 110%
+    
+}
+.milestone>.milestone-goal{
+    font-size: 120%
+}
+.battle{
+    display: flex;
+    justify-content: center;
+}
+.battle-playerenemy-description{
+    width: 150px;
+    padding: 5px;
+    border: 2px solid #fff;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+.battle-enemychoose-description{
+    width:fit-content;
+    padding: 5px;
+    border: 2px solid #fff;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin: auto;
+
+}
+.fill-button{
+    width: 3.6cm;
+    height: 2.4cm;
+    border: 2px solid #ffffff;
+    margin: auto;
+
+}
+.fill-button:hover{
+    background-color: #666
 }

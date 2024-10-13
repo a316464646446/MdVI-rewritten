@@ -1,5 +1,13 @@
 const changelog = [
     {
+        version: "2.2.0", title: "POWIAINANUM来了！",
+        changes: [
+            "添加了战斗场",
+            "添加了5维的一部分内容：里程碑",
+            "替换原来的大数库ExpantaNum.js为PowiainaNum.js"
+        ]
+    },
+    {
         version: "2.1.4", title: "快来了吗？",
         changes: [
             "修复了howAllPrestigeLayers的bug",

@@ -11,8 +11,16 @@
     
     <script src="./assets/script/loader.js" defer></script>
     <script src="./assets/script/technical/vue.min.js" defer></script>
-    <script src="./assets/script/technical/ExpantaNum.js" defer></script>
-    <script src="./assets/script/technical/format_expantanum.js" defer></script>
+    <script src="./assets/script/technical/PowiainaNum.js" defer></script>
+    <script src="./assets/script/technical/format_powiainanum.js" defer></script>
+    <script>/*
+        function format(x){
+            return x.toString()
+        }
+        function formatWhole(x){
+            return x.toString()
+        }*/
+        </script>
     <script src="./assets/script/technical/hotkeys.js" defer></script>
     <script src="./assets/script/formatTime.js" defer></script>
     <script src="./assets/script/display.js" defer></script>
@@ -31,6 +39,7 @@
     <script src="./assets/script/automation.js" defer></script>
 
     <script src="./assets/script/PL2/mm5.js" defer></script>
+    <script src="./assets/script/battle/battle.js" defer></script>
 
 </head>
 
@@ -77,17 +86,114 @@
             </button>
         </div>
         <div class="main-line"></div>
+        <!-- <div v-if="player.currentPage == 14112">
+            <div class="text-center" v-for="const enemy in enemies" v-if="enemy.unlocked">
+                hp: {{format(enemy.hp)}}<br>
+                atk: {{format(enemy.atk)}}<br>
+                def: {{format(enemy.def)}}<br>
+                aps: {{format(enemy.aps)}}<br>
+            </div>
+        </div> -->
+        <div v-if="player.currentPage == 13">
+            <div class="text-center">
+                <div class="battle">
+                    <div class="battle-playerenemy-description">
+                        hp: {{format(player.currentHP)}}/{{format(getCurrentHPCap())}}<br>
+                        mp: {{format(player.currentMP)}}<br>
+                        atk: {{format(player.currentATK)}}<br>
+                        def: {{format(player.currentDEF)}}<br>
+                        {{format(player.currentAPS)}} <abbr title="attack per second">aps</abbr><br>
+                        <br>
+                        XP: {{format(player.XP)}}
+                    </div>
+                    <div class="battle-playerenemy-description" v-if="player.currentBattlingEnemyId == -1">
+                        hp: 0<br>
+                        atk: 0<br>
+                        def: 0<br>
+                        0 <abbr title="attack per second">aps</abbr><br>
+                    </div>
+                    <div class="battle-playerenemy-description" v-else>
+                        hp: {{format(enemies[player.currentBattlingEnemyId].hp.sub(player.enemyHPspent))}}<br>
+                        atk: {{format(enemies[player.currentBattlingEnemyId].atk)}}<br>
+                        def: {{format(enemies[player.currentBattlingEnemyId].def)}}<br>
+                        {{format(enemies[player.currentBattlingEnemyId].aps)}} aps<br>
+                    </div>
+                </div>
+                <br>
+                填充4维体积，提高生命值上限(+{{format(tmp.battle.feature1Effect)}}/100000)<br>
+                当前: {{format(player.fillFeatureProgress1)}}/1e100000<br>
+                <div class="fill-button" @click="fillForFeature(1)">填充<br>当前{{isFilling(1)?"正在":"不正在"}}填充</div>
+
+                
+                <br>
+                技能:<br>
+                攻击: 使对方的生命值减少atk<br>
+                恢复：每秒生命×1.05（战斗时无效）
+                <br>
+                <br>
+                升级<br>
+                <table class="text-center">
+                    <tr>
+                        <td>
+                            <button class="mm5upg" :class="{unlocked: hasBattleUpgrade(1)}"@click="buyBattleUpgrade(1)">基于经验提升小朋友上限和小朋友获取<br>当前: ×{{format(getBattleUpgradeEffect(1))}}<br>需要20经验</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div v-if="player.currentPage == 14" class="text-center">
+            <div v-for="enemy in enemies" v-if="enemy.unlocked" :key="enemy.id" class="battle-enemychoose-description">
+                {{enemy.id}}<br>
+                hp: {{format(enemy.hp)}}<br>
+                atk: {{format(enemy.atk)}}<br>
+                def: {{format(enemy.def)}}<br>
+                aps: {{format(enemy.aps)}}<br>   
+                获得的经验: {{format(enemy.expGain)}}<br>
+                <br>
+                <span v-html="enemy.pentalyWhenInBattle()"></span><br>   
+                <span v-html="enemy.pentalyWhenFailed()"></span><br>   
+                <button @click="battleEnemy(enemy.id)" class="btn">战斗</button>
+
+            </div>
+        </div>
         <div v-if="player.currentPage == 12">
-            <table>
+            <!-- <table>
                 <tr>
                     <td><button class="mm5upg" :class="{unlocked: hasMM5Upg(1)}" @click="buyMM5Upg(1)"><br>花费：1 mm<sup>5</sup></button></td>
                 </tr>
-            </table>
+            </table>-->
+            <p class="text-center">mm<sup>5</sup>重置次数: {{format(player.PL2times)}}</p>
+            <div class="milestone">
+                <div class="milestone-goal">1 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">获得3.205倍多的小朋友，减少解锁小朋友所需要的3维体积，增加4维体积获取软上限</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">2 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">移除4维体积获取软上限，保留3D升级1,4,6,9,13,14，保留挑战1,2完成状态，获得1000倍多的3维体积</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">3 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">每秒自动获得^0.5将要获得的3维体积</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">4 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">解锁战斗场</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">6 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">保留所有3D升级，直接解锁小朋友，重置时保留^0.5小朋友，保留维度提升^2</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">10 mm<sup>5</sup>重置次数，获得超过19200mm<sup>5</sup></div>
+                <div class="milestone-description" title="风灵作成: ？">解锁次数商店</div>
+            </div>
+            
         </div>
+
         <div v-if="player.currentPage == 10">
             <div class="text-center" v-if="!player.PL1xiaopengyouUnl"><button class="btn mm3btn" @click="unlockXiaopengyou()">
                 解锁小朋友<br>
-                需要1.000e6 mm<sup>3</sup>
+                需要{{player.PL2times.gte(1) ? "1,000" : "1,000,000"}} mm<sup>3</sup>
             </button></div>
             <div v-else>
                 <div class="text-center">
@@ -113,7 +219,7 @@
         </div>
         <div v-if="player.currentPage == 9" class="text-center">
             <button class="btn mm3btn" @click="doMM3resetManmade()">重置1-8维度，4维体积，维度提升，获得{{format(tmp.mm3.gain)}} mm<sup>3</sup> 3维体积<br>需要 1.000e200 mm<sup>4</sup></button>
-            <button class="btn mm5btn" @click="doMM5resetManmade()" v-if="hasMM3Upg(20)">重置4维和3维的所有资源和升级，获得{{format(tmp.mm5.gain)}} mm<sup>5</sup> 5维体积<br>需要 1e100,000 mm<sup>4</sup></button>
+            <button class="btn mm5btn" @click="doMM5resetManmade()" v-if="hasMM3Upg(20)">重置4维和3维的所有资源和升级，获得{{format(tmp.mm5.gain)}} mm<sup>5</sup> 5维体积<br>需要 1.000e50000 mm<sup>4</sup></button>
             
         </div>
         <div v-if="player.currentPage == 8" class="text-center">
@@ -166,7 +272,7 @@
                         <button class="mm3upg" :class="{unlocked: hasMM3Upg(19)}" @click="buyMM3Upg(19)">基于3维体积加成小朋友获取<br>花费：2.000e6 小朋友</button>
                     </td>
                     <td>
-                        <button class="mm3upg" :class="{unlocked: hasMM3Upg(20)}" @click="buyMM3Upg(20)">解锁下一个声望层（建议开128倍达成）<br>花费：2.000e11 小朋友</button>
+                        <button class="mm3upg" :class="{unlocked: hasMM3Upg(20)}" @click="buyMM3Upg(20)">解锁下一个声望层<br>花费：7.000e9 小朋友</button>
                     </td>
                 </tr>
                 <tr>
@@ -195,7 +301,7 @@
             <br>
             <p>每次购买乘数: {{format(tmp.dimension.getBoughtMultiplier())}}</p>
             <div v-for="dim in dimensions" :key="dim.id" class="text-center">
-                {{ dim.label }}
+                {{ dimensionsLabel(dim.id) }}
                 +<span>{{
                     format(player.dimensions[DIMENSIONS_POINTS][dim.id
                     - 1]) }}
@@ -224,6 +330,14 @@
                         "关"}}
                     </button>
             </div>
+            <!-- <div v-if="hasMM3Upg(20)" v-for="dimid in A9to16" class="text-center">
+                {{ dimensionsLabel(dimid) }} +0.0000 x0.0000 ^0.0000 0.0000
+                <button class="btn" disabled>价格: 1.0000e500 mm<sup>3</sup></button>
+            </div> -->
+            <div style="color: red" v-if="tmp.mm4.softcapped1">
+                After <b v-html="format(tmp.mm4.softcap1start)"></b>
+                of 4D volumes gain, 4D volumes gain will be softcapped!(软上限限时回归!!!)
+            </div>
         </div>
 
         <div v-if="player.currentPage == 2" class="text-center">
@@ -235,54 +349,13 @@
         </div>
         <div v-if="player.currentPage == 3" class="text-center">
             <div>
-                <span v-html="formatEndgame()"></span><br />
-                当前版本： {{changelog[0].version}}<br />
-                使用
-                <a href="https://github.com/Naruyoko/ExpantaNum.js" target="_blank">Naruyoko/ExpantaNum.js</a>
-                <a href="https://github.com/cloudytheconqueror/letter-notation-format"
-                    target="_blank">cloudytheconqueror/letter-notation-format</a>
-                处理大数字<br />
-
+                <p v-html="formatEndgame()"></p>
+                <p v-html="formatHardcap()"></p>
+                <br>
+                作者:VeryrrDefine<br>
+                当前版本： {{changelog[0].version}}<br>
+                使用<a href="https://github.com/VeryrrDefine/PowiainaNum.js" target="_blank">PowiainaNum.js</a>处理大数字<br>
                 <hr>
-                <p>
-                    支持所有序数增量吧吧友，点击下面玩吧友们制作的游戏
-                </p>
-                <a href="https://seanxlx2011.github.io/" target="_blank" class="game-link">
-                    Incremental Data
-                    Rewritten</a>,<br />
-                <a href="https://0i00000000a7.github.io/points-incremental-rewritten/" target="_blank"
-                    class="game-link">
-                    Points Incremental Rewritten
-                </a>,<br />
-                <a href="https://aster131072.github.io/incremental_evolution/" target="_blank"
-                    class="game-link">Incremental
-                    Evolution</a>,<br />
-                <a href="https://dlsdl.github.io/wind_spirit_creation/" target="_blank" class="game-link">Wind
-                    spirit
-                    creation</a>,<br />
-                <a href="https://qqqe308.github.io/The-Rhythm-Game-Tree/" target="_blank" class="game-link">The Rhythm
-                    Game
-                    Tree
-                </a>,<br />
-                <a href="https://a262537412640768744.github.io/homework-incremental/main.html" target="_blank"
-                    class="game-link">
-                    Homework Incremental </a>,<br />
-                <a href="https://goldenapple125.github.io/RBN/" target="_blank" class="game-link">The Road of
-                    Big Number </a>,<br />
-                <a href="https://qqqe308.github.io/Anti-Anti-Softcap-Tree/111/" target="_blank" class="game-link">
-                    Anti anti softcap tree </a>,<br />
-                <br />
-                <br />
-                <p>你也可以玩其他的增量游戏！</p>
-                <a href="https://ivark.github.io/AntimatterDimensions" target="_blank" class="game-link">Antimatter
-                    Dimensions</a>,<br />
-                <a href="https://seanxlx2011.github.io/" target="_blank" class="game-link">
-                    <del>Infinity Dimension Rewritten</del> </a>,<br />
-                <a href="https://jacorb90.github.io/Prestige-Tree/" target="_blank" class="game-link">
-                    The Prestige Tree </a>,<br />
-                <a href="https://patcailmemer.github.io/Ordinal-Markup" target="_blank" class="game-link tooltipBox">
-                    Ordinal Markup<span class="tooltip">Stop updated on Mar 23, 2021</span> </a><br />
-                <hr />
                 <h1>---更新日志---</h1>
                 <changelog></changelog>
             </div>
@@ -325,10 +398,27 @@
             ">You have enough Infinity Points to buy a Tesseract</button><br><br><br>
             <div  style="
             animation: bigcrunch 2s infinite;">啊，我被大嘎吱嘎吱了，功力只剩一成</div>
+            
+            <hr>
+            <p>支持所有序数增量吧吧友，点击下面玩吧友们制作的游戏</p>
+            <a href="https://seanxlx2011.github.io/" target="_blank">数据增量重置版</a>,<br>
+            <a href="https://0i00000000a7.github.io/points-incremental-rewritten/" target="_blank">点数增量重置版</a>,<br>
+            <a href="https://aster131072.github.io/incremental_evolution/" target="_blank">增量进化</a>,<br>
+            <a href="https://dlsdl.github.io/wind_spirit_creation/" target="_blank">风灵作成</a>,<br>
+            <a href="https://qqqe308.github.io/The-Rhythm-Game-Tree/" target="_blank">音乐游戏树</a>,<br>
+            <a href="https://a262537412640768744.github.io/homework-incremental/main.html" target="_blank">作业增量</a>,<br>
+            <a href="https://goldenapple125.github.io/RBN/" target="_blank">大数之路</a>,<br>
+            <a href="https://qqqe308.github.io/Anti-Anti-Softcap-Tree/111/" target="_blank">反-反软上限树</a>,<br>
+            <br>
+            <p>你也可以玩其他的增量游戏！</p>
+            <a href="https://ivark.github.io/AntimatterDimensions" target="_blank">反物质维度</a>,<br />
+            <a href="https://seanxlx2011.github.io/" target="_blank"><del>无限维度重置版</del></a>,<br />
+            <a href="https://jacorb90.github.io/Prestige-Tree/" target="_blank">声望树</a>,<br />
+            <a href="https://patcailmemer.github.io/Ordinal-Markup" target="_blank">序数增量</a>
         </div>
         <div v-if="player.currentPage == 11" class="text-center">
             20XX年，世界末日到来，<br>
-            邪恶博士XXX(代号:O(/əʊ/))宣称自己掌握了可以毁灭宇宙的技术，同时也放出了<br>
+            邪恶博士XXX(代号:1187)宣称自己掌握了可以毁灭宇宙的技术，同时也放出了<br>
             一张被挑战书，被挑战书（破损）的内容如下：<br>
             <div style="width: 500px; height: 707.1067811865476px; border: #fff solid 2px; margin: auto;">
                 <h1 style="font-size: 1cm">被挑战书</h1>
@@ -337,10 +427,10 @@
                 </p>
                 <p style="text-align: right;">XXX&nbsp;<br>20XX年3月1日</p>
             </div>
-            在被挑战书放出后几年，O(/əʊ/)组织有一人叛变，向【数据删除】报告了被挑战书的完整内容，<br>也报告了挑战地方的位置。<br>
+            在被挑战书放出后几年，1187组织有一人叛变，向【数据删除】报告了被挑战书的完整内容，<br>也报告了挑战地方的位置。<br>
             在进入了挑战位置后，在挑战房间角落找到了一张"前人"留下的纸条：<div class="backgroundsettingnote" @click="enterFinalChallenge()">
                 不仅只有这一个房间，&nbsp;&nbsp;还有无数个&nbsp;&nbsp;房间...<br><br>
-                还有最终挑&nbsp;&nbsp;战...K...一&nbsp;&nbsp;...E...十...四...
+                还有最终挑&nbsp;&nbsp;战...&nbsp;&nbsp;...&nbsp;&nbsp;...&nbsp;&nbsp;...&nbsp;&nbsp;...
 
             </div><br>
         </div>
@@ -359,6 +449,35 @@
             mm11: f1.797e308<br>
         </div>
         <div v-if="player.currentPage == 9006">
+第一章 反问题尺寸<br>
+一觉醒来，我发现自己变成了10个反问题，只好最大购买量以购买第一尺寸，接着，我循环进行最大购买量，同时购买嘀嗒速度，最后我得到了方面促进，进入第五尺寸<br>
+我不断进行方面促进，最后进入了第八尺寸，并进行尺寸牺牲。接着，我得到了自动售卖机购买维度和反问题银河系。<br>
+最后，我以两个反问题银河系进行了大嘎吱嘎吱，得到了1无穷远点<br>
+<br>
+第二章 大嘎吱<br>
+在获得1无穷远点后，我首当其冲地购买了无穷提升11，并进入盘问8，这使我获得无穷远点的效率大大提升。在得到无穷提升24后，我退出了盘问8。接着，我不断刷取无穷远点，并分别完成了盘问11, 盘问10, 盘问12，得到了自动售卖机大嘎吱嘎吱，并将其提升至0.1第二，堕了无穷<br>
+堕完无穷后，我完成了其它盘问，接着旋转了桌子，并购买了一些堕无穷提升。很快，我得到了1e8无穷远点，购买了第一无穷提升。这使我刷取无穷远点的速度得到了大幅提升。最后，我购买了5e11的堕无穷提升，停止了刷无穷远点的旅程。并开始完成无穷大盘问。最后，我得到了1e140无穷远点，解锁了复制人<br>
+解锁复制人后，我的无穷尺寸得到了增强，这使我获取无穷远点的速度得到了更大的提升。接着，我得到了复制人银河系，这无疑再次提升了我们的无穷远点。最后，我通过1.8e308无穷远点进入了永远。<br>
+<br>
+第三章 永远<br>
+进入永远后我得到了1永远指画，买了光阴维度，它给了我一些自由的嘀嗒速度。我还得到了永远成就。随着进度的恢复，我还购买了一些光阴法则，并用其购买了光阴学习树树。<br>
+随着我不断的进入永远，我的永远指画和光阴法则随之越来越多，我还购买了一些永远提升。<br>
+然后，我拥有了130光阴法则，进入并完成了永远盘问1×1。随后，我大量的进行永远盘问。最终，我得到了光阴学习181。得到光阴学习181后，我继续进行永远盘问，彻底完成了永远盘问1, 2, 3, 4, 5, 6, 8, 9。最后，我完成了永远盘问10x1，进入了光暗之树。完成了永远盘问10x1之后，我继续刷取光阴法则，最后我完成了所有光阴盼望。解锁了时间扩张。<br>
+在时间扩张中，我的永远指画大幅上升，从1e1300提升到了1e4000。<br>
+最后，我通过十三行成绩进入了实际。<br>
+<br>
+第四章 实际<br>
+进入实际后，我获得了实际车和字形以及复兴指画，字形提供了强大的增益。接着，我使用实际车购买了一些实际提升，使用复兴指画购买了复兴树树上的升级。它们使我可以更快的恢复之前的进度。随着进度的发展，我还得到了太空黑洞和自动机器。在购买了所有实际提升后，解锁了第一个天体：有一个。<br>
+通过填充弥漫实际车，我解锁完成了有一个的实际以及复兴车间，还获得了一些其它的增益。接着，我完成了有一个的实际。在弥漫了1e24实际车后，解锁了第二个天体：强调。<br>
+在解锁强调后，我每次实际的时候还会获取一些遗物碎片，我用其在强调的商店购买了一些提升。最后，我解锁了强调的无穷大，解锁了强调的永远。在完成强调的永远后，解锁了强调的实际和第三个天体：匿名。在完成强调的实际后，解锁了强调符文。<br>
+匿名使我可以存储游戏光阴和实际光阴，它们还能购买匿名的升级。购买了第二个匿名的升级后，解锁了匿名的实际，我通过匿名的提示，很快便完成了它，解锁了多维数据集。在匿名的实际的实际中，我获得了一个成绩，它解锁了第四个天体：五<br>
+在达到一些目标后，我解锁了五的实际，五的实际还有一些别的要求，我很快就完成了它们，获得了一些五-成绩和太空法则，太空法则帮助我完全购买了光阴学习树树。通过五-成绩，解锁了第五个天体：镭。<br>
+镭的实际一开始就解锁了，在其中可以获取记忆块和记忆，其中还有很多成就。它们拓展了之前天体的能力。<br>
+在达到1e1000实际车后，它们达到了上限，开始获取假想车。假想车用于购买假想提升。<br>
+在购买了假想提升35后，解锁了连续体和第六个天体：来忑拉。在莱忑拉中，解锁了奇点，暗问题，暗活力和暗问题方面。通过奇点，我获得了奇点成就。在不续航性来忑拉的八次现实后，我获得了1.6e15假想车，解锁了最后一个天体：皮肤。<br>
+<br>
+第五章 预订实际<br>
+解锁皮肤后，我预订了我的实际，这使我之前的实际层内容几乎全部被禁用了。但解锁了一种新重置：世界末日。此重置可获取残余，残余会生成实际碎片。实际碎片可以购买皮肤提升。在达到一定进度后，我还解锁了五个罢工条，最终，我重新得到了1e4000永远指画，解锁银河系生成器，获得了末日即将来临毁灭即将来临帮助我们永远再见个反问题，击败了皮肤。<br>
 
         </div>
     </div>
