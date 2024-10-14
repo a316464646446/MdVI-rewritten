@@ -39,6 +39,10 @@ function getCurrentHPCap(){
     return new PowiainaNum(1).add(tmp.battle.feature1Effect);
 }
 function battleEnemy(id){
+    if (player.currentBattlingEnemyId !== 1) {
+        alert("你目前正在战斗中");
+        return ;
+    }
     player.currentBattlingEnemyId = id;
 }
 function fillForFeature(i){
