@@ -1,5 +1,11 @@
 const changelog = [
     {
+        version: "2.2.0.2", title: "",
+        changes: [
+            "修个战斗场的bug"
+        ]
+    },
+    {
         version: "2.2.0.1", title: "",
         changes: [
             "修个战斗场的bug"
