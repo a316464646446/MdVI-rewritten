@@ -233,6 +233,9 @@ a:-webkit-any-link{
 .milestone>.milestone-goal{
     font-size: 120%
 }
+[mm5page]>.milestone {
+    border-color: #0ff;
+}
 .battle{
     display: flex;
     justify-content: center;

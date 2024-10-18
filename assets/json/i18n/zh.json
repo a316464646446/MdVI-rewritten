@@ -1,0 +1,20 @@
+{
+    "title": "多维体积增量重置版",
+    "youhave": "你有",
+    "4dvolumes": "4维体积",
+    "currentglobalspeed": "当前全局游戏速度: ×",
+    "youneedsomethingtogofurther": "你需要???才能走得更远！",
+
+    "3dvolumes": "3维体积",
+    "5dvolumes": "5维体积",
+
+    "tabMain": "主要",
+    "tabDimensionsonetoeight": "1-8维度",
+    "tabDimensionBoost": "维度提升",
+
+    "tabAutomation": "自动",
+    "tabReset": "重置",
+    "tabOfflinedTime": "离线时间",
+
+    "resetPL1layer": "重置1-8维度，4维体积，维度提升，获得"
+}

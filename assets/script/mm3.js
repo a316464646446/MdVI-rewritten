@@ -40,7 +40,7 @@ function norewardMM3reset(){
     resetDimensions();
     player.PL1Timespent = 0;
     player.dimBoostTimespent = 0;
-    player.dimBoost = E(hasMM3Upg(7) ? 35 : 
+    if (player.PL2times.lt(400)) player.dimBoost = E(hasMM3Upg(7) ? 35 : 
         (hasMM3Upg(6) ? 10 : 0)
     );
     player.volumes = E(7);
@@ -49,7 +49,7 @@ function norewardMM3reset(){
 
 function doMM3reset() {
     player.PL1points = player.PL1points.add(tmp.mm3.gain);
-    player.PL1total = player.PL1total.add(1);
+    player.PL1total = player.PL1total.add(tmp.mm3.gain);
     player.PL1times = player.PL1times.add(1);
     player.isPL1unlocked = true;
     norewardMM3reset();
@@ -66,10 +66,19 @@ function doMM3resetManmade() {
 
 function mm3Loop(){
     player.PL1upgrades = [...(new Set(player.PL1upgrades))]
-    if (player.PL2times.gte(3)){
+    if (player.PL2times.gte(50)){
+        if (tmp.mm3.gain.gt(1)){
+            player.PL1points = player.PL1points.add(tmp.mm3.gain.pow(1).mul(globalDiff))
+        }
+    }
+    else if (player.PL2times.gte(3)){
         if (tmp.mm3.gain.gt(1)){
             player.PL1points = player.PL1points.add(tmp.mm3.gain.pow(0.5).mul(globalDiff))
         }
+    }
+    if (player.PL2times.gte(15)){
+        if (player.PL1points.gte(getBuyableCost(1))) buyBuyable(1);
+        if (player.PL1xiaopengyouPoints.gte(getBuyableCost(2))) buyBuyable(2);
     }
 }
 
@@ -122,7 +131,7 @@ function buyBuyable(x){
         case 1:
             if (player.PL1buyable1.lt(softcap(player.PL1points,7**18,0.5,"pow").logarithm(7).ceil())){
                 player.PL1buyable1 = softcap(player.PL1points,7**18,0.5,"pow").logarithm(7).floor();
-                player.PL1points = player.PL1points.sub(getBuyableCost(1))
+                if (player.PL2times.lt(15)) player.PL1points = player.PL1points.sub(getBuyableCost(1))
                 player.PL1buyable1 = player.PL1buyable1.add(1);
 
             }
@@ -131,8 +140,9 @@ function buyBuyable(x){
             
         case 2:
             if (player.PL1xiaopengyouPoints.gte(getBuyableCost(2))){
-                player.PL1xiaopengyouPoints = player.PL1xiaopengyouPoints.sub(getBuyableCost(2))
+                if (player.PL2times.lt(15)) player.PL1xiaopengyouPoints = player.PL1xiaopengyouPoints.sub(getBuyableCost(2))
                 player.PL1buyable2 = player.PL1buyable2.add(1);
+                
             }
             break;
     }

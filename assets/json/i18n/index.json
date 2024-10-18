@@ -1,0 +1,10 @@
+[
+    {
+        "name": "简体中文",
+        "filename": "zh.json"
+    },
+    {
+        "name": "English",
+        "filename": "en.json"
+    }
+]

@@ -24,6 +24,8 @@ function getRealDimBoost(){
         temp1 = temp1.mul(0.1)
     }
     temp1 = softcap(temp1,5e4,0.5,"pow")
+
+    if (player.PL2times.gte(400)) temp1 = temp1.mul(1.05)
     return temp1
 }
 function getDimBoughts() {
@@ -189,11 +191,17 @@ const dimBoostReward2 = [
 ]
 function dimBoost2(){
     if (player.volumes.gte(tmp.dimensionBoost.require2())){
-        player.dimBoost2 = player.dimBoost2.add(1)
-        player.dimBoostTimespent = 0;
-        resetDimensions();
-        player.volumes = E(7)
-        player.dimBoost = E(35)
+        
+
+        if (player.PL2times.lt(90)){
+            player.dimBoost2 = player.dimBoost2.add(1)
+            player.dimBoostTimespent = 0;
+            resetDimensions();
+            player.volumes = E(7)
+            player.dimBoost = E(35)
+        }else if (player.dimBoost2.lt(tmp.dimensionBoost.bulkDB2())){
+            player.dimBoost2 = tmp.dimensionBoost.bulkDB2().clone();
+        }
 
     }
 

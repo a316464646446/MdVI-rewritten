@@ -43,33 +43,41 @@ var tabShow = {
     main: {
         dimensions: {
             id: 1,
-            text: "维度",
+            text: "tabDimensionsonetoeight",
             unlocked() {
                 return true;
             },
         },
         dimboost: {
             id: 4,
-            text: "维度提升", 
+            text: "tabDimensionBoost", 
             unlocked() {
                 return true;
             }
         },
         offline: {
             id:5,
-            text: "离线时间",
+            text: "tabOfflinedTime",
             unlocked() {
                 return true;
             }
         },
-        text: "主要",
+        fivedimensiondimensions: {
+            id: 15,
+            class: "mm5btn",
+            text: "9-16维度",
+            unlocked(){
+                return player.PL2times.gte(1500)    
+            }
+        },
+        text: "tabMain",
         firstTabID: 1
     },
     automation: {
-        text: "自动",
+        text: "tabAutomation",
         firstTabID: 8,
         auto: {
-            text: "自动",
+            text: "tabAutomation",
             id: 8
         },
         unlocked(){
@@ -77,7 +85,7 @@ var tabShow = {
         }
     },
     reset: {
-        text: "重置",
+        text: "tabReset",
         firstTabID: 9,
         faketab: {
             unlocked(){return false},
@@ -254,7 +262,7 @@ function primaryTabSort() {
                 result.push(
                     {
                         style: (tabShow[key].style ?? ""),
-                        text:  tabShow[key].text,
+                        text:  glt(tabShow[key].text),
                         name: key,
                         id: tabShow[key].firstTabID
                     }
@@ -281,7 +289,7 @@ function secondaryTabSort() {
                             {
                                 id: tabShow[key][subtabKey].id,
                                 style: (tabShow[key][subtabKey].style ?? ""),
-                                text:  tabShow[key][subtabKey].text,
+                                text:  glt(tabShow[key][subtabKey].text),
                                 name: subtabKey,
                                 parentTab: key
                             }

@@ -90,29 +90,29 @@ function format(num, precision=4, small=false){
     else if (num.lt("9007199254740991")) {
         a = num.log10().floor().toNumber();
         b = num.div(10**a).toNumber();
-        return `${b.toFixed(precision2)}e${a}`;
+        return `${format(b,precision2)}e${a}`;
     }else if (num.lt("1e1000000000")){
         let a = Math.floor(num.array[0])
         let b = 10**(num.array[0]-a)
-        return `${b.toFixed(precision2)}e${a}`;
+        return `${format(b,precision2)}e${a}`;
     }
     else if (num.lt(E.E_MAX_SAFE_INTEGER)) {
         a = num.log10().log10().floor().toNumber();
         b = num.log10().div(10**a).toNumber();
-        return `e${b.toFixed(precision2)}e${a}`;
+        return `e${format(b,precision2)}e${a}`;
     }else if (num.lt("ee1000000000")){
         let a = Math.floor(num.array[0])
         let b = 10**(num.array[0]-a)
-        return `e${b.toFixed(precision2)}e${a}`;
+        return `e${format(b,precision2)}e${a}`;
     }
     else if (num.lt(E.EE_MAX_SAFE_INTEGER)) {
         a = num.log10().log10().log10().floor().toNumber();
         b = num.log10().log10().div(10**a).toNumber();
-        return `ee${b.toFixed(precision2)}e${a}`;
+        return `ee${format(b,precision2)}e${a}`;
     }else if (num.lt("eee1000000000")){
         let a = Math.floor(num.array[0])
         let b = 10**(num.array[0]-a)
-        return `ee${b.toFixed(precision2)}e${a}`;
+        return `ee${format(b,precision2)}e${a}`;
     }
     else if (num.lt("10^^1000000")) { // 1F5 ~ F1,000,000
         let pol = polarizeE(array)
@@ -325,7 +325,7 @@ function commaFormat(num, precision) {
     if (zeroCheck < 0.001) return (0).toFixed(precision)
     let init = num.toString()
     let portions = init.split(".")
-    portions[0] = portions[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+    portions[0] = portions[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1"+comma)
     return portions[0]
 }
 
@@ -336,7 +336,7 @@ function regularFormat(num, precision) {
     let fmt = num.toString()
     let f = fmt.split(".")
     if (precision == 0) return commaFormat(num.floor ? num.floor() : Math.floor(num))
-    else if (f.length == 1) return fmt + "." + "0".repeat(precision)
+    else if (f.length == 1) return fmt + period + "0".repeat(precision)
     else if (f[1].length < precision) return fmt + "0".repeat(precision - f[1].length)
-    else return f[0] + "." + f[1].substring(0, precision)
+    else return f[0] + period + f[1].substring(0, precision)
 }

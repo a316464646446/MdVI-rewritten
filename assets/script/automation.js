@@ -65,7 +65,17 @@ const automationTypes = {
         unlocked(){
             return hasMM3Upg(7)
         }
-    }
+    },
+
+    "dimboost2":{
+        time() {return 0},
+        action(){dimBoost2()},
+        canAction(){return player.auto.includes(11)},
+        text: "自动维度提升^2",
+        unlocked(){
+            return player.PL2times.gte(90)
+        },
+    },
 }
 function getAutomationTabDetail(){
     let result = ""

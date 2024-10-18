@@ -79,11 +79,18 @@ function hardReset() {
         isPL2unlocked: false,
         PL2times: ExpantaNum.ZERO,
         PL2total: ExpantaNum.ZERO,
-        PL2Timespent: 0,
+        PL2Timespent: 0, // 时间流逝
 
 
         PL2inchallenge: 0,
         PL2chal: [],
+
+        PL2resetTimesSpent: PowiainaNum.ZERO, 
+
+        PL2RTupgrade1: PowiainaNum.ZERO,
+        PL2RTupgrade2: PowiainaNum.ZERO,
+
+        //#region Battle
 
         currentHP: ExpantaNum.ONE.clone(),
         currentMP: ExpantaNum.ZERO.clone(),
@@ -91,16 +98,23 @@ function hardReset() {
         currentATK: ExpantaNum.ONE.clone(),
         currentAPS: ExpantaNum.ONE.clone(),
 
+        currentEnemyHP: ExpantaNum.ZERO.clone(),
+
         XP: ExpantaNum.ZERO.clone(),
 
         currentFilling: [],
 
         fillFeatureProgress1: PowiainaNum.ZERO.clone(),
+        fillFeatureProgress2: PowiainaNum.ZERO.clone(),
 
         enemyHPspent: ExpantaNum.ZERO.clone(),
         currentBattlingEnemyId: -1,
         
         battleUpgrade: [],
+
+        enemiesUnlocked: [],
+
+        //#endregion
     }
 }
 

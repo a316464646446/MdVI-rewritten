@@ -10,6 +10,7 @@
 
     
     <script src="./assets/script/loader.js" defer></script>
+    <script src="./assets/script/i18n.js" defer></script>
     <script src="./assets/script/technical/vue.min.js" defer></script>
     <script src="./assets/script/technical/PowiainaNum.js" defer></script>
     <script src="./assets/script/technical/format_powiainanum.js" defer></script>
@@ -48,24 +49,22 @@
         <div>
             <newsticker></newsticker>
             <div class="text-center">
-                你有 <span class="vol-dis">{{formatWhole(player.volumes)}}</span> mm<sup>4</sup> 4维体积
+                {{glt("youhave")}} <span class="vol-dis">{{formatWhole(player.volumes)}}</span> mm<sup>4</sup> {{glt("4dvolumes")}}
             </div>
-            <div v-if="player.timeSpeed != 1" class="text-center">当前全局游戏速度: ×{{format(player.timeSpeed)}}</div>
-            <div v-if="player.volumes.gte('1e200') && !player.isPL1unlocked" class="text-center">你需要???才能走得更远！
-
-            </div>
+            <div v-if="player.timeSpeed != 1" class="text-center">{{glt("currentglobalspeed")+format(player.timeSpeed)}}</div>
+            <div v-if="player.volumes.gte('1e200') && !player.isPL1unlocked" class="text-center">{{glt("youneedsomethingtogofurther")}}</div>
             <div class="text-center"></div>
             <div v-if="player.volumes.gte(mm3ChallengeGoal[player.PL1inchal]) && !player.PL1breakedPL1limit" class="text-center">
-                <button class="btn mm3btn" @click="doMM3resetManmade()">重置1-8维度，4维体积，维度提升，获得{{format(tmp.mm3.gain)}} mm<sup>3</sup> 3维体积</button>
+                <button class="btn mm3btn" @click="doMM3resetManmade()">{{glt("resetPL1layer")+format(tmp.mm3.gain)}} mm<sup>3</sup> {{glt("3dvolumes")}}</button>
             </div>
-            <div v-if="player.isPL1unlocked" class="mm3text text-center">你有{{format(player.PL1points)}} mm<sup>3</sup> 3维体积</div>
-            <div v-if="player.isPL2unlocked" class="mm5text text-center">你有{{format(player.PL2points)}} mm<sup>5</sup> 5维体积</div>
+            <div v-if="player.isPL1unlocked" class="mm3text text-center">{{glt("youhave")}}{{format(player.PL1points)}} mm<sup>3</sup> {{glt("3dvolumes")}}</div>
+            <div v-if="player.isPL2unlocked" class="mm5text text-center">{{glt("youhave")}}{{format(player.PL2points)}} mm<sup>5</sup> {{glt("5dvolumes")}}</div>
             <div v-if="showAllPrestigeLayers">
-                <div class="mm6text text-center">你有0.00 mm<sup>6</sup> 6维体积</div>
-                <div class="mm7text text-center">你有0.00 mm<sup>7</sup> 7维体积</div>
-                <div class="mm8text text-center">你有0.00 mm<sup>8</sup> 8维体积</div>
-                <div class="mm9text text-center">你有0.00 mm<sup>9</sup> 9维体积</div>
-                <div class="mm10text text-center">你有0.00 mm<sup>10</sup> 10维体积</div>
+                <div class="mm6text text-center">{{glt("youhave")}}0.00 mm<sup>6</sup> 6维体积</div>
+                <div class="mm7text text-center">{{glt("youhave")}}0.00 mm<sup>7</sup> 7维体积</div>
+                <div class="mm8text text-center">{{glt("youhave")}}0.00 mm<sup>8</sup> 8维体积</div>
+                <div class="mm9text text-center">{{glt("youhave")}}0.00 mm<sup>9</sup> 9维体积</div>
+                <div class="mm10text text-center">{{glt("youhave")}}0.00 mm<sup>10</sup> 10维体积</div>
                 
             </div>
             <div v-if="isEndgame()" :style="{color: getUndulatingColor()}" class="text-center">已达到当前版本终点！</div>
@@ -113,22 +112,35 @@
                         0 <abbr title="attack per second">aps</abbr><br>
                     </div>
                     <div class="battle-playerenemy-description" v-else>
-                        hp: {{format(enemies[player.currentBattlingEnemyId].hp.sub(player.enemyHPspent))}}<br>
+                        hp: {{format(player.currentEnemyHP)}}<br>
                         atk: {{format(enemies[player.currentBattlingEnemyId].atk)}}<br>
                         def: {{format(enemies[player.currentBattlingEnemyId].def)}}<br>
                         {{format(enemies[player.currentBattlingEnemyId].aps)}} aps<br>
                     </div>
                 </div>
                 <br>
-                填充4维体积，提高生命值上限(+{{format(tmp.battle.feature1Effect)}}/100000)<br>
-                当前: {{format(player.fillFeatureProgress1)}}/1e100000<br>
-                <div class="fill-button" @click="fillForFeature(1)">填充<br>当前{{isFilling(1)?"正在":"不正在"}}填充</div>
+                <div class="battle">
+                    <div class="battle-playerenemy-description" style="width: 250px">
+                        填充4维体积，提高生命值上限(+{{format(tmp.battle.feature1Effect)}}/100000)<br>
+                        当前: {{format(player.fillFeatureProgress1)}}/1e100000<br>
+                        <div class="fill-button" @click="fillForFeature(1)">填充<br>当前{{isFilling(1)?"正在":"不正在"}}填充
+
+                        </div>
+                    </div>
+                    <div class="battle-playerenemy-description" style="width: 250px" v-if="player.PL2times.gte(75)">
+                        填充5维体积，提高DEF(+{{format(tmp.battle.feature2Effect)}}/10000)<br>
+                        当前: {{format(player.fillFeatureProgress2)}}/1e1000000<br>
+                        <div class="fill-button" @click="fillForFeature(2)">填充<br>当前{{isFilling(2)?"正在":"不正在"}}填充
+
+                        </div>
+                    </div>
+                </div>
 
                 
                 <br>
                 技能:<br>
                 攻击: 使对方的生命值减少atk<br>
-                恢复：每秒生命×1.05（战斗时无效）
+                恢复：每秒生命×5（战斗时无效）
                 <br>
                 <br>
                 升级<br>
@@ -142,7 +154,7 @@
             </div>
         </div>
         <div v-if="player.currentPage == 14" class="text-center">
-            <div v-for="enemy in enemies" v-if="enemy.unlocked" :key="enemy.id" class="battle-enemychoose-description">
+            <div v-for="enemy in enemies" v-if="enemy.unlocked || player.enemiesUnlocked.includes(enemy.id)" :key="enemy.id" class="battle-enemychoose-description">
                 {{enemy.id}}<br>
                 hp: {{format(enemy.hp)}}<br>
                 atk: {{format(enemy.atk)}}<br>
@@ -156,7 +168,7 @@
 
             </div>
         </div>
-        <div v-if="player.currentPage == 12">
+        <div v-if="player.currentPage == 12" mm5page>
             <!-- <table>
                 <tr>
                     <td><button class="mm5upg" :class="{unlocked: hasMM5Upg(1)}" @click="buyMM5Upg(1)"><br>花费：1 mm<sup>5</sup></button></td>
@@ -173,7 +185,7 @@
             </div>
             <div class="milestone">
                 <div class="milestone-goal">3 mm<sup>5</sup>重置次数</div>
-                <div class="milestone-description">每秒自动获得^0.5将要获得的3维体积</div>
+                <div class="milestone-description">每秒获得^0.5将要获得的3维体积</div>
             </div>
             <div class="milestone">
                 <div class="milestone-goal">4 mm<sup>5</sup>重置次数</div>
@@ -187,7 +199,47 @@
                 <div class="milestone-goal">10 mm<sup>5</sup>重置次数，获得超过19200mm<sup>5</sup></div>
                 <div class="milestone-description" title="风灵作成: ？">解锁次数商店</div>
             </div>
-            
+            <div class="milestone">
+                <div class="milestone-goal">15 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">自动购买小朋友×2和{{glt("3dvolumes")}}获取×2购买项,且这两个购买项不会消耗任何东西</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">50 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">替换3 mm<sup>5</sup>重置次数的里程碑，但每秒获得^1将要获得的3维体积</div>
+            </div>
+            <!-- <div class="milestone">
+                <div class="milestone-goal">75 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">每秒获得10%重置时获得的mm<sup>5</sup>重置次数</div>
+            </div> -->
+            <div class="milestone">
+                <div class="milestone-goal">75 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">解锁第二个战斗场填充进度条，解锁第二个enemy</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">90 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">维度提升^2不会重置任何东西，解锁自动维度提升^2</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">160 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">重置保留小朋友</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">400 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">获得1.05×多维度提升，保留维度提升</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">1500 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">在"主要"页面解锁5D维度维度</div>
+            </div>
+            <div v-if="player.PL2times.gte(10) && player.PL2total.gte(19200)">
+                <p class="text-center">你当前有{{format(getRealPL2resetTimes())}}可用mm<sup>5</sup>重置次数</p>
+                <table align="center">
+                    <tr>
+                        <td><button class="mm5upg" onclick="buyPL2Upg(1)" style="font-size: 80%">基于重置次数提升1-8维度购买数量<br>当前等级: {{format(player.PL2RTupgrade1)}} 效果：×{{format(PL2UpgEffect1())}}<br>花费:{{format(PL2UpgCost(1))}}<span style="font-size:75%">mm<sup>5</sup>可用重置次数</span></td>
+                        <td><button class="mm5upg" onclick="buyPL2Upg(2)" style="font-size: 80%">翻倍重置次数获取<br>当前: ×{{format(PL2UpgEffect2())}}<br>花费:{{format(PL2UpgCost(2))}}<span style="font-size:75%">mm<sup>5</sup>可用重置次数</span></td>
+                    </tr>
+                </table>
+            </div>
         </div>
 
         <div v-if="player.currentPage == 10">
@@ -197,7 +249,7 @@
             </button></div>
             <div v-else>
                 <div class="text-center">
-                    <p>你有<span class="mm3text">{{format(player.PL1xiaopengyouPoints)}}(+{{format(getXiaopengyouGain())}}/s)</span>小朋友，他们使每次购买的乘数×{{format(xiaopengyouEffect1())}}</p>
+                    <p>你有<span class="mm3text">{{format(player.PL1xiaopengyouPoints)}}/{{format(tmp.mm3.xiaopengyouCap())}}(+{{format(getXiaopengyouGain())}}/s)</span>小朋友，他们使每次购买的乘数×{{format(xiaopengyouEffect1())}}</p>
                     <p>已解锁一个新的购买项在"升级"选项卡</p>
                 </div>
                 <p class="mm3text text-center">
@@ -218,7 +270,7 @@
             </table>
         </div>
         <div v-if="player.currentPage == 9" class="text-center">
-            <button class="btn mm3btn" @click="doMM3resetManmade()">重置1-8维度，4维体积，维度提升，获得{{format(tmp.mm3.gain)}} mm<sup>3</sup> 3维体积<br>需要 1.000e200 mm<sup>4</sup></button>
+            <button class="btn mm3btn" @click="doMM3resetManmade()">{{glt("resetPL1layer")}}{{format(tmp.mm3.gain)}} mm<sup>3</sup> 3维体积<br>需要 1.000e200 mm<sup>4</sup></button>
             <button class="btn mm5btn" @click="doMM5resetManmade()" v-if="hasMM3Upg(20)">重置4维和3维的所有资源和升级，获得{{format(tmp.mm5.gain)}} mm<sup>5</sup> 5维体积<br>需要 1.000e50000 mm<sup>4</sup></button>
             
         </div>
@@ -276,7 +328,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
+                    <td><button class="mm3upg" style="border: var(--color-text-invert); color: var(--color-text-invert);"></button></td>
                 </tr>
                 <tr>
                     <td><button class="mm3upg" style="border: var(--color-text-invert)"></button></td>
@@ -299,7 +351,7 @@
                 购买最大
             </button>
             <br>
-            <p>每次购买乘数: {{format(tmp.dimension.getBoughtMultiplier())}}</p>
+            <p>此种类维度每次购买乘数: {{format(tmp.dimension.getBoughtMultiplier())}}</p>
             <div v-for="dim in dimensions" :key="dim.id" class="text-center">
                 {{ dimensionsLabel(dim.id) }}
                 +<span>{{
@@ -339,6 +391,27 @@
                 of 4D volumes gain, 4D volumes gain will be softcapped!(软上限限时回归!!!)
             </div>
         </div>
+        <div v-if="player.currentPage == 15" class="text-center">
+            <button class="btn" @click="buyall()" @touchstart="isHoldMax = true;" @touchend="isHoldMax = false;"
+                v-on:mousedown="isHoldMax = true;" v-on:mouseup.native="isHoldMax = false;">
+                购买最大
+            </button>
+            <br>
+            <p style="font-size: 500%">5<sup>5<sup>5<sup>5</sup></sup></sup>小时后更新</p>
+            <p>此种类维度每次购买乘数: 1.2000</p>
+            <div v-for="dim in dimensions" :key="dim.id" class="text-center">
+                {{ dimensionsLabel(dim.id+8) }}
+                +0.0000
+                x1.0000
+                ^1.0000
+                0.0000
+                <button class="btn" disabled>价格: 50,000,000 mm<sup>5</sup></button>
+            </div>
+            <!-- <div v-if="hasMM3Upg(20)" v-for="dimid in A9to16" class="text-center">
+                {{ dimensionsLabel(dimid) }} +0.0000 x0.0000 ^0.0000 0.0000
+                <button class="btn" disabled>价格: 1.0000e500 mm<sup>3</sup></button>
+            </div> -->
+        </div>
 
         <div v-if="player.currentPage == 2" class="text-center">
             <button class="btn" @click="formattedHardReset">硬重置</button>
@@ -350,12 +423,29 @@
         <div v-if="player.currentPage == 3" class="text-center">
             <div>
                 <p v-html="formatEndgame()"></p>
-                <p v-html="formatHardcap()"></p>
+                <p v-if="false" v-html="formatHardcap()"></p>
                 <br>
                 作者:VeryrrDefine<br>
                 当前版本： {{changelog[0].version}}<br>
                 使用<a href="https://github.com/VeryrrDefine/PowiainaNum.js" target="_blank">PowiainaNum.js</a>处理大数字<br>
-                <hr>
+                <div class="main-line"></div>
+                <p>支持所有序数增量吧吧友，点击下面玩吧友们制作的游戏</p>
+                <a href="https://seanxlx2011.github.io/" target="_blank">数据增量重置版</a>,
+                <a href="https://0i00000000a7.github.io/points-incremental-rewritten/" target="_blank">点数增量重置版</a>,
+                <a href="https://aster131072.github.io/incremental_evolution/" target="_blank">增量进化</a>,
+                <a href="https://dlsdl.github.io/wind_spirit_creation/" target="_blank">风灵作成</a>,<br>
+                <a href="https://qqqe308.github.io/The-Rhythm-Game-Tree/" target="_blank">音乐游戏树</a>,
+                <a href="https://a262537412640768744.github.io/homework-incremental/main.html" target="_blank">作业增量</a>,
+                <a href="https://goldenapple125.github.io/RBN/" target="_blank">大数之路</a>,
+                <a href="https://qqqe308.github.io/Anti-Anti-Softcap-Tree/111/" target="_blank">反-反软上限树</a>,
+                <br><br>
+                <p>你也可以玩其他的增量游戏！</p>
+                <a href="https://ivark.github.io/AntimatterDimensions" target="_blank">反物质维度</a>,<br>
+                <a href="https://seanxlx2011.github.io/" target="_blank"><del>无限维度重置版</del></a>,
+                <a href="https://jacorb90.github.io/Prestige-Tree/" target="_blank">声望树</a>,
+                <a href="https://patcailmemer.github.io/Ordinal-Markup" target="_blank">序数增量</a><br><br>
+                
+                <div class="main-line"></div>
                 <h1>---更新日志---</h1>
                 <changelog></changelog>
             </div>
@@ -372,6 +462,10 @@
             <div v-if="hasMM3Upg(13)">
                 <p>维度提升^2({{format(player.dimBoost2)}})</p>
                 <button class="btn" @click="dimBoost2" v-html="dimBoost2Description()">
+                </button><br>
+                <button class="btn" v-if="player.PL2times.gte(90)" @click="toggleAutobuyer(11)">
+                    自动: {{player.auto.includes(11) ? "开" :
+                    "关"}}
                 </button>
             </div>
             <div v-html="statBoosts()"></div>

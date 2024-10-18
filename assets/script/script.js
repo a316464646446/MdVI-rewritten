@@ -16,8 +16,9 @@ function loop(){
     fixInfinity();
     automationLoop();
     mm3Loop();
-    updateTime();
     xiaopengyouLoop();
+    mm5Loop();
+    updateTime();
     battleLoop()
     player.time = thisFrame
     lastFrame = thisFrame;
@@ -169,15 +170,18 @@ function softcap(value,start,power,mode,dis=false){
 }
 
 function enterFinalChallenge(){
-    alert("经过推测，进入最终挑战所需的某个数值超过了...，现在你还没有能力实现...\n但是请等待游戏更新")
+    alert("经过推测，进入最终挑战所需的某个数值超过了Infinity，现在你还没有能力到达\n但是请等待游戏更新")
     
 }
 
 (function() {
     document.addEventListener('DOMContentLoaded', function(e) {
-        load(e);
-        window.loopVal = setInterval(loop, 1000/30)
-        window.saveVal = setInterval(save, 1000);
+        loadI18N().then(function(){
+            load(e);
+            window.loopVal = setInterval(loop, 1000/30)
+            window.saveVal = setInterval(save, 1000);
+
+        });
     });
 })();
 

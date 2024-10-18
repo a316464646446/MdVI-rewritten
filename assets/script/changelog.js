@@ -1,5 +1,13 @@
 const changelog = [
     {
+        version: "2.2.1", title: "",
+        changes: [
+            "添加了里程碑的一部分",
+            "添加了次数商店",
+            "添加了第二个战斗场填充进度条"
+        ]
+    },
+    {
         version: "2.2.0.2", title: "",
         changes: [
             "修个战斗场的bug"

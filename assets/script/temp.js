@@ -19,6 +19,7 @@ var tmp = {
             if (player.PL1chal.includes(1)){
                 finbought = finbought.mul(1.02)
             }
+            finbought = finbought.mul(PL2UpgEffect1().max(1))
             return finbought
 
         },
@@ -55,6 +56,7 @@ var tmp = {
             if (player.dimBoost2.gte(1)){
                 temp1 = temp1.add(0.01)
             }
+
             return temp1
         },
         getBoughtMultiplier() {
@@ -78,6 +80,10 @@ var tmp = {
             let req = E.pow(10,E.add(900,E.pow(E.mul(15,player.dimBoost2),2)))
 
             return req
+        },
+        bulkDB2(){
+            let bulk = player.volumes.log10().sub(900).pow(0.5).div(15).ceil();
+            return bulk
         },
         requireDivision(){
             
@@ -120,6 +126,7 @@ var tmp = {
             if (hasBattleUpgrade(1)){
                 temp1 = temp1.mul(getBattleUpgradeEffect(1));
             }
+
             return temp1;
         }
     },
@@ -131,6 +138,9 @@ var tmp = {
     battle: {
         get feature1Effect(){
             return player.fillFeatureProgress1.max(1).logarithm(10).max(0).min(100000);
+        },
+        get feature2Effect(){
+            return player.fillFeatureProgress2.max(1).logarithm(10).max(0).min(1000000).mul(100);
         }
     }
 }

@@ -22,19 +22,24 @@ function norewardMM5reset(){
     player.PL1times = E(0);
     player.PL1buyable2 = E(0);
     if (player.PL2times.lt(6)) player.PL1xiaopengyouPoints = E(0);
-    else player.PL1xiaopengyouPoints = player.PL1xiaopengyouPoints.root(2);
+    else if (player.PL2times.lt(160)) player.PL1xiaopengyouPoints = player.PL1xiaopengyouPoints.root(2);
+
     if (player.PL2times.lt(6)) player.PL1xiaopengyouUnl = false;
 
     player.PL1points = E(0);
-    player.dimBoost = E(0);
+    if (player.PL2times.lt(400)) player.dimBoost = E(0);
+    
     if (player.PL2times.lt(6)) player.dimBoost2 = E(0);
 
 
 }
-
+function calcGetPL2resetTimes(){
+    return PL2UpgEffect2()
+}
 function doMM5reset() {
-    player.PL2points = player.PL2points.add(tmp.mm5.gain)
-    player.PL2times = player.PL2times.add(1);
+    player.PL2points = player.PL2points.add(tmp.mm5.gain);
+    player.PL2total = player.PL2total.add(tmp.mm5.gain);
+    player.PL2times = player.PL2times.add(calcGetPL2resetTimes());
     player.isPL2unlocked = true;
     norewardMM5reset();
     if (player.PL2times.lt(2)){
@@ -48,6 +53,39 @@ function doMM5resetManmade() {
         doMM5reset()
     }
 }
+function PL2UpgCost(id){
+    switch(id){
+        case 1:
+            if (player.PL2RTupgrade1.gte(4)){
+                return PowiainaNum.POSITIVE_INFINITY.clone()
+            }
+            return PowiainaNum.pow(5,player.PL2RTupgrade1.add(1))
+        case 2:
+            return PowiainaNum(10).mul(PowiainaNum.pow(5,player.PL2RTupgrade2))
+    }
+}
+function getRealPL2resetTimes(){
+    return player.PL2times.sub(player.PL2resetTimesSpent);
+}
+function buyPL2Upg(id){
+    if (getRealPL2resetTimes().gte(PL2UpgCost(id))){
+        player.PL2resetTimesSpent = player.PL2resetTimesSpent.add(PL2UpgCost(id))
+        if (id == 1) player.PL2RTupgrade1 = player.PL2RTupgrade1.add(1)
+        if (id == 2) player.PL2RTupgrade2 = player.PL2RTupgrade2.add(1)
+    }
+}
+function PL2UpgEffect1(){
+    if (player.PL2RTupgrade1.eq(0)){
+        return PowiainaNum.ONE.clone();
+    }
+    return getRealPL2resetTimes().max(PowiainaNum.sub(10,player.PL2RTupgrade1)).logarithm(PowiainaNum.sub(10,player.PL2RTupgrade1))
+}
+function PL2UpgEffect2(){
+    return PowiainaNum.pow(4,player.PL2RTupgrade2).max(1)
+}
 
-function hasMM5Upg(){return false;}
-function buyMM5Upg(){}
+function mm5Loop(){
+    /*if (player.PL2times.gte(75)){
+        player.PL2times = player.PL2times.add(calcGetPL2resetTimes().mul(0.1).mul(globalDiff))
+    }*/
+}
