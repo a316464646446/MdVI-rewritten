@@ -28,7 +28,7 @@ function norewardMM5reset(){
 
     player.PL1points = E(0);
     if (player.PL2times.lt(400)) player.dimBoost = E(0);
-    
+
     if (player.PL2times.lt(6)) player.dimBoost2 = E(0);
 
 
@@ -61,6 +61,9 @@ function PL2UpgCost(id){
             }
             return PowiainaNum.pow(5,player.PL2RTupgrade1.add(1))
         case 2:
+            if (player.PL2RTupgrade2.gte(7)){
+                return PowiainaNum.POSITIVE_INFINITY.clone()
+            }
             return PowiainaNum(10).mul(PowiainaNum.pow(5,player.PL2RTupgrade2))
     }
 }

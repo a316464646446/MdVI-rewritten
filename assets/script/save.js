@@ -214,7 +214,17 @@ function exportFile() {
     a.download = "Mdv Incremental Save - " + getCurrentBeijingTime() + ".txt"
     a.click()
 }
-  
+async function importText(){
+    let save = prompt("输入存档");
+    
+    importing_player = formatsave.decode(save)
+    hardReset();
+    transformToE(importing_player);
+    deepCopyProps(importing_player, player)
+    save()
+
+    location.href = location.href;
+}
 function formattedHardReset() {
     confirms = 3
     for(let i = 1; i < 3; i++) {
