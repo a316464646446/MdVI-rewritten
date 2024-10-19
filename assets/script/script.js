@@ -1,7 +1,6 @@
 var player = {};
 var thisFrame = Date.now();
 var lastFrame = Date.now();
-var QqQe308Fans = 165;
 var isHoldMax = false;
 var globalDiff = 0;
 var realityDiff = 0;
