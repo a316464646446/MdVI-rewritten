@@ -1,5 +1,11 @@
 const changelog = [
     {
+        version: "2.2.2.1", title: "",
+        changes: [
+            "修复了因为区分大小写导致的报错"
+        ]
+    },
+    {
         version: "2.2.2", title: "暴涨期",
         changes: [
             "添加了第三个战斗场填充进度条",

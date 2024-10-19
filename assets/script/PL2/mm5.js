@@ -1,5 +1,5 @@
 loadScriptFile("PL2/mm5dimensions.js")
-loadScriptFile("PL2/upgradeTower.js")
+loadScriptFile("PL2/upgradetower.js")
 loadScriptFile("PL2/reactor.js")
 function norewardMM5reset(){
     norewardMM3reset();
