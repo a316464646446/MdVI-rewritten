@@ -2,6 +2,7 @@
 // Set smallTop to true to force the top value in the result below 10
 
 
+
 let MAX_LOGP1_REPEATS = 48
 let LOG5E = 0.6213349345596119
 function polarizeE(array, smallTop=false) {
@@ -91,7 +92,7 @@ function format(num, precision=4, small=false){
         a = num.log10().floor().toNumber();
         b = num.div(10**a).toNumber();
         return `${format(b,precision2)}e${a}`;
-    }else if (num.lt("1e1000000000")){
+    }else if (num.lt("1e1e8")){
         let a = Math.floor(num.array[0])
         let b = 10**(num.array[0]-a)
         return `${format(b,precision2)}e${a}`;
@@ -100,7 +101,7 @@ function format(num, precision=4, small=false){
         a = num.log10().log10().floor().toNumber();
         b = num.log10().div(10**a).toNumber();
         return `e${format(b,precision2)}e${a}`;
-    }else if (num.lt("ee1000000000")){
+    }else if (num.lt("ee1e8")){
         let a = Math.floor(num.array[0])
         let b = 10**(num.array[0]-a)
         return `e${format(b,precision2)}e${a}`;
@@ -109,7 +110,7 @@ function format(num, precision=4, small=false){
         a = num.log10().log10().log10().floor().toNumber();
         b = num.log10().log10().div(10**a).toNumber();
         return `ee${format(b,precision2)}e${a}`;
-    }else if (num.lt("eee1000000000")){
+    }else if (num.lt("eee1e8")){
         let a = Math.floor(num.array[0])
         let b = 10**(num.array[0]-a)
         return `ee${format(b,precision2)}e${a}`;
@@ -163,9 +164,27 @@ function format(num, precision=4, small=false){
         let n = arraySearch(array, 3) + 1
         if (num.gte("10^^^^" + (n + 1))) n += 1
         return "h" + format(n, precision)
-    }
-    else if (num.lt("l0 s1 a[10,[\"x\",1000000,1,1]]")){ // 1K5 ~ K1000000
-        return "我不到啊K" + format(num.operator("x"))
+    }else if (num.lt("l0 s1 a[10,[1000000,1,1,1]]")){
+        /*
+        xJy = 10{y}x
+        10{10}10{9}10{8}10{7}10{6}10{5}10{4}10^^^10^^1e10
+        10{10}10{9}10{8}10{7}10{6}10{5}HGF1e10
+
+        */
+        let pol = polarizeE(array, true)
+        return regularFormat(Math.log10(pol.bottom) + pol.top, precision4) + "J" + commaFormat(pol.height)
+    }else if (num.lt("J^4 10")){ // J1,000,000 ~ 1K5
+        let rep = num.operator("x")
+        if (rep >= 1) {
+            num.operatorE("x", 0);
+            return "J".repeat(rep) + format(num, precision)
+        }
+        let n = array[array.length-1][num.getMaxFirstOperatorIndex()];
+        if (num.gte("J" + (n + 1))) n += 1
+        return "J" + format(n, precision)
+        
+    }else if (num.lt("l0 s1 a[10,[\"x\",1000000,1,1]]")){ // 1K5 ~ K1000000
+        
         
     }else if (num.lt("l0 s1 a[10,[1,4,2,1]]")){ // K1000000 ~ 1L5
 
@@ -179,15 +198,27 @@ function format(num, precision=4, small=false){
         }
         
     }else if (num.lt("l0 s1 a[10,[1,999999,2,1]]")){ // 1L5 ~ L1000000
-        return "我不到啊L" + format(num.operator(1,2))
+        return "我不到啊#(1,2)" + format(num.operator(1,2))
 
     }else if (num.lt("l0 s1 a[10,[2,5,2,1]]")){ // 1L5 ~ L^5 10
         if (num.lt(`l0 s1 a[10,[1,${Number.MAX_SAFE_INTEGER},2,1]]`)){
-            return "L" + format(num.operator(1,2))
+            return "#(1,2)" + format(num.operator(1,2))
         }else{
             let rep = num.operator(2,2);
             num.operator(2,2,1,0);
-            return "L".repeat(rep) + format(num);
+            return "#(1,2)".repeat(rep) + format(num);
+
+        }
+    }else if (num.lt("l0 s1 a[10,[1,999999,3,1]]")){
+        return "我不到啊#(1,3)" + format(num.operator(1,3))
+
+    }else if (num.lt("l0 s1 a[10,[2,5,3,1]]")){ 
+        if (num.lt(`l0 s1 a[10,[1,${Number.MAX_SAFE_INTEGER},3,1]]`)){
+            return "#(1,3)" + format(num.operator(1,3))
+        }else{
+            let rep = num.operator(2,3);
+            num.operator(2,3,1,0);
+            return "#(1,3)".repeat(rep) + format(num);
 
         }
     } // beyond L^5 10

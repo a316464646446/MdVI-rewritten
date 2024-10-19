@@ -1,4 +1,6 @@
-
+loadScriptFile("PL2/mm5dimensions.js")
+loadScriptFile("PL2/upgradeTower.js")
+loadScriptFile("PL2/reactor.js")
 function norewardMM5reset(){
     norewardMM3reset();
     player.PL1Timespent = 0;
@@ -30,8 +32,10 @@ function norewardMM5reset(){
     if (player.PL2times.lt(400)) player.dimBoost = E(0);
 
     if (player.PL2times.lt(6)) player.dimBoost2 = E(0);
-
-
+    player.PL2dimensionalEnergy = PowiainaNum.ZERO.clone();
+    for (let i = 8; i<16; i++){
+        player.dimensions[DIMENSIONS_POINTS][i] = player.dimensions[DIMENSIONS_BOUGHT][i].mul(10);
+    }
 }
 function calcGetPL2resetTimes(){
     return PL2UpgEffect2()
@@ -88,7 +92,14 @@ function PL2UpgEffect2(){
 }
 
 function mm5Loop(){
-    /*if (player.PL2times.gte(75)){
-        player.PL2times = player.PL2times.add(calcGetPL2resetTimes().mul(0.1).mul(globalDiff))
-    }*/
+    if (player.PL2times.gte(7000)){
+        player.PL2points = player.PL2points.add(tmp.mm5.gain.mul(globalDiff))
+    }
+    if (player.PL2times.gte(250000)){
+        player.XP = player.XP.add(PowiainaNum.mul(10,globalDiff))
+    }
+    player.PL2theoChoose = [...(new Set(player.PL2theoChoose))];
+    if (hasTheorie(31) && hasTheorie(32)){
+        player.isUnlockedDimBoost3 = true
+    }
 }

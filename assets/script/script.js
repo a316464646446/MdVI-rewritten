@@ -1,7 +1,7 @@
 var player = {};
 var thisFrame = Date.now();
 var lastFrame = Date.now();
-
+var QqQe308Fans = 165;
 var isHoldMax = false;
 var globalDiff = 0;
 var realityDiff = 0;
@@ -12,6 +12,7 @@ function loop(){
     updateOffline();
     updateDimensionData();
     calculateDimensions();
+    calculatemm5Dimensions();
     updateVolumes();
     fixInfinity();
     automationLoop();
@@ -106,6 +107,7 @@ function calc_cost(dimid, count) {
 }
 function updateVolumes() {
     player.volumes = player.volumes.add(tmp.mm4.gain.mul(globalDiff))
+    player.volumesTotal = player.volumesTotal.add(tmp.mm4.gain.mul(globalDiff))
 }
 function buydim(dim, single = false) {
     if (player.PL1breakedPL1limit && (player.PL1inchal!=1)){
@@ -176,7 +178,22 @@ function enterFinalChallenge(){
 
 (function() {
     document.addEventListener('DOMContentLoaded', function(e) {
-        loadI18N().then(function(){
+        loadI18N()/*.then(function (){
+            const getQqQe308FansFetch = fetch(
+                "https://api.bilibili.com/x/relation/stat?vmid=3493117070149692&jsonp=jsonp"
+            )
+            return getQqQe308FansFetch
+        }).then(function (requestFetch){
+            return requestFetch.text();
+        }).then(function (responseText){
+            var result = JSON.parse(responseText);
+            if (result.code != 0){
+                console.error("无法正确获取QqQe308的粉丝量，code"+result.code+"， message"+result.message);
+            }else {
+                window.QqQe308Fans = result.data.follower
+                console.log("QqQe308粉丝量: "+QqQe308Fans)
+            }
+        })*/.then(function(){
             load(e);
             window.loopVal = setInterval(loop, 1000/30)
             window.saveVal = setInterval(save, 1000);

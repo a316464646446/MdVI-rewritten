@@ -30,6 +30,17 @@ const enemies = [
             return player.PL2times.gte(75)
         },
 
+    },
+    {
+        hp: new PowiainaNum(15),
+        atk: new PowiainaNum(2002),
+        def: new PowiainaNum(0.2),
+        aps: new PowiainaNum(1),
+
+        expGain: new PowiainaNum(100),
+        get unlocked(){
+            return player.volumes.gte("1e600000")
+        },
     }
 ]
 for (let i = 0; i< enemies.length; i++){
@@ -48,10 +59,13 @@ for (let i = 0; i< enemies.length; i++){
     }
 }
 function getCurrentHPCap(){
-    return new PowiainaNum(1).add(tmp.battle.feature1Effect);
+    return new PowiainaNum(1).add(tmp.battle.feature1Effect).add(tmp.battle.feature3Effect);
 }
 function getCurrentDEF(){
     return new PowiainaNum(0).add(tmp.battle.feature2Effect);
+}
+function getCurrentATK(){
+    return new PowiainaNum(1).add(tmp.battle.feature3Effect);
 }
 function battleEnemy(id){
     if (player.currentBattlingEnemyId !== -1) {
@@ -76,9 +90,10 @@ function battleLoop(){
 
     if (player.PL2times.gte(4)){
         player.currentDEF = getCurrentDEF();
+        player.currentATK = getCurrentATK();
         if (isFilling(1)){
             if (player.volumes.gte(14)){
-                if (player.fillFeatureProgress1.lt("1e100000")){
+                if (player.PL2times.gte(1000000) || player.fillFeatureProgress1.lt("1e100000")){
                     player.fillFeatureProgress1 = player.fillFeatureProgress1.add(player.volumes.sub(7));
                     player.volumes = new PowiainaNum(7);
                 }else{
@@ -94,6 +109,14 @@ function battleLoop(){
                 }else{
                     player.fillFeatureProgress2 = new PowiainaNum("1e10000")
                 }
+            }
+        }
+        if (isFilling(3)){
+            if (player.fillFeatureProgress3.lt("1e100000")){
+                player.fillFeatureProgress3 = player.fillFeatureProgress3.add(player.PL1points.sub(0));
+                player.PL1points = new PowiainaNum(0);
+            }else{
+                player.fillFeatureProgress3 = new PowiainaNum("1e100000")
             }
         }
 

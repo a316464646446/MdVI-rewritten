@@ -145,6 +145,16 @@ var tabShow = {
             class: 'mm5btn',
             text: "里程碑"
         },
+        upgradeTower: {
+            id: 16,
+            class: 'mm5btn',
+            text: "研究升级"
+        },
+        reactor: {
+            id: 17,
+            class: "mm5btn",
+            text: "反应堆"
+        },
         class: "mm5btn",
         unlocked() {
             if (showAllPrestigeLayers){

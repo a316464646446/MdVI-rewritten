@@ -4,26 +4,27 @@ var hasLoaded = {
 }
 function resetDimensions() {
     player.dimensions = [
-        [ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO], //dimensions
-        [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dimensions_multi
-        [ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO], // dimensions_bought
-        [E(10), E(100), E(1000), E(1e4), E(1e5), E(1e6), E(1e7), E(1e8)],// dim_cost
-        [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dim_exponent
-        [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dim_doubleexponent
+        new Array(16).fill(PowiainaNum.ZERO.clone()), //dimensions
+        new Array(16).fill(PowiainaNum.ONE.clone()), //dimensions_multi
+        new Array(16).fill(PowiainaNum.ZERO.clone()), // dimensions_bought
+        new Array(16).fill(PowiainaNum.POSITIVE_INFINITY.clone()),// dim_cost
+        new Array(16).fill(PowiainaNum.ONE.clone()), //dim_exponent
+        new Array(16).fill(PowiainaNum.ONE.clone()), //dim_doubleexponent
     ]
 }
 function hardReset() {
     player = {
         version: 1,
         dimensions: [
-            [ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO], //dimensions
-            [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dimensions_multi
-            [ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO, ExpantaNum.ZERO], // dimensions_bought
-            [E(10), E(100), E(1000), E(1e4), E(1e5), E(1e6), E(1e7), E(1e8)],// dim_cost
-            [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dim_exponent
-            [ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE, ExpantaNum.ONE], //dim_doubleexponent
+            new Array(16).fill(PowiainaNum.ZERO.clone()), //dimensions
+            new Array(16).fill(PowiainaNum.ONE.clone()), //dimensions_multi
+            new Array(16).fill(PowiainaNum.ZERO.clone()), // dimensions_bought
+            new Array(16).fill(PowiainaNum.POSITIVE_INFINITY.clone()),// dim_cost
+            new Array(16).fill(PowiainaNum.ONE.clone()), //dim_exponent
+            new Array(16).fill(PowiainaNum.ONE.clone()), //dim_doubleexponent
         ],
         volumes: E(7),
+        volumesTotal: PowiainaNum.ZERO.clone(),
         currentPage: 1,
         time: Date.now(),
 
@@ -38,7 +39,7 @@ function hardReset() {
         timeSpeed: 0,
         optHotkey: true,
 
-        // mm^3
+        //#region PL1
         isPL1unlocked: false,
         PL1Timespent: 0,
         PL1points: ExpantaNum.ZERO,
@@ -74,7 +75,9 @@ function hardReset() {
         automationState: {
             
         },
-
+        //#endregion
+        
+        //#region PL2
         PL2points: ExpantaNum.ZERO,
         isPL2unlocked: false,
         PL2times: ExpantaNum.ZERO,
@@ -89,6 +92,19 @@ function hardReset() {
 
         PL2RTupgrade1: PowiainaNum.ZERO,
         PL2RTupgrade2: PowiainaNum.ZERO,
+
+        PL2dimensionalEnergy: PowiainaNum.ZERO,
+
+        PL2theorieSpent: PowiainaNum.ZERO,
+        PL2theoTyp1: PowiainaNum.ZERO,
+        PL2theoTyp2: PowiainaNum.ZERO,
+        PL2theoTyp3: PowiainaNum.ZERO,
+
+        PL2theoChoose: [],
+
+        isUnlockedDimBoost3: false,
+        dimBoost3: PowiainaNum.ZERO,
+        //#endregion
 
         //#region Battle
 
@@ -106,6 +122,7 @@ function hardReset() {
 
         fillFeatureProgress1: PowiainaNum.ZERO.clone(),
         fillFeatureProgress2: PowiainaNum.ZERO.clone(),
+        fillFeatureProgress3: PowiainaNum.ZERO.clone(),
 
         enemyHPspent: ExpantaNum.ZERO.clone(),
         currentBattlingEnemyId: -1,
@@ -215,9 +232,9 @@ function exportFile() {
     a.click()
 }
 async function importText(){
-    let save = prompt("输入存档");
+    let save2 = prompt("输入存档");
     
-    importing_player = formatsave.decode(save)
+    importing_player = formatsave.decode(save2)
     hardReset();
     transformToE(importing_player);
     deepCopyProps(importing_player, player)

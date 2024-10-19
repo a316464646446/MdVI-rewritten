@@ -14,7 +14,7 @@ button{
 .btn {
     border: solid 2px #444;
     background-color: #1b1b1b;
-    color: white;
+    color: var(--color-text);
     font-size: 14px;
     cursor: pointer;
     transition-property: background-color, border, transform, box-shadow;
@@ -27,7 +27,7 @@ button{
     text-decoration: none;
     border: 1px solid #777;
     background: #333;
-    color: white;
+    color: var(--color-text);
     display: inline-block;
 }
 .game-link {
@@ -51,7 +51,7 @@ button{
     margin-bottom: 13px;
 }
 #news {
-    color: white;
+    color: var(--color-text);
     width: 90%;
     top: 0px;
     height: 20px;
@@ -101,7 +101,7 @@ button{
 }
 
 .chalpl0, .chalpl1, .chalpl2{
-    color: #ffffff;
+    color: var(--color-text);
     width: 200px;
     height: 124px;
     font-size: 13px;
@@ -192,7 +192,7 @@ button{
     width: 184px;
     height: 136px;
 
-    color: #ffffff;
+    color: var(--color-text);
     border: 2px solid #dd0;
     font-size: 16px;
     text-decoration: none;
@@ -202,7 +202,7 @@ button{
     width: 184px;
     height: 136px;
 
-    color: #ffffff;
+    color: var(--color-text);
     border: 2px solid #0dd;
     font-size: 16px;
     text-decoration: none;
@@ -265,4 +265,29 @@ a:-webkit-any-link{
 }
 .fill-button:hover{
     background-color: #666
+}
+
+.upgtow {
+    width: 184px;
+    height: 136px;
+    border: 2px solid #0dd;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.rea{
+    width: 120px;
+    height: 120px;
+    background-color: #044;
+    color: #ffffff;
+    border: 2px solid #0aa;
+    border-radius: 3px;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+}
+.rea_active{
+    background-color: #088;
+
 }

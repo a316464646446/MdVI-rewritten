@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M-dimensional Volume Incremental Rewritten</title>
     <link href="./assets/style/core.css" rel="stylesheet">
+    <link href="icon.png" rel="shortcut icon" type="image/x-icon">
 
     
     <script src="./assets/script/loader.js" defer></script>
@@ -121,8 +122,8 @@
                 <br>
                 <div class="battle">
                     <div class="battle-playerenemy-description" style="width: 250px">
-                        填充4维体积，提高生命值上限(+{{format(tmp.battle.feature1Effect)}}/100000)<br>
-                        当前: {{format(player.fillFeatureProgress1)}}/1e100000<br>
+                        填充4维体积，提高生命值上限(+{{format(tmp.battle.feature1Effect)}}<span v-if="player.PL2times.lt(1000000)">/100000</span>)<br>
+                        当前: {{format(player.fillFeatureProgress1)}}<span v-if="player.PL2times.lt(1000000)">/1e100000</span><br>
                         <div class="fill-button" @click="fillForFeature(1)">填充<br>当前{{isFilling(1)?"正在":"不正在"}}填充
 
                         </div>
@@ -131,6 +132,13 @@
                         填充5维体积，提高DEF(+{{format(tmp.battle.feature2Effect)}}/10000)<br>
                         当前: {{format(player.fillFeatureProgress2)}}/1e1000000<br>
                         <div class="fill-button" @click="fillForFeature(2)">填充<br>当前{{isFilling(2)?"正在":"不正在"}}填充
+
+                        </div>
+                    </div>
+                    <div class="battle-playerenemy-description" style="width: 250px" v-if="player.volumes.gte('1e800000') || player.fillFeatureProgress3.neq(0)">
+                        填充3维体积，提高ATK和生命值上限(+{{format(tmp.battle.feature3Effect)}}/100000)<br>
+                        当前: {{format(player.fillFeatureProgress3)}}/1e100000<br>
+                        <div class="fill-button" @click="fillForFeature(3)">填充<br>当前{{isFilling(3)?"正在":"不正在"}}填充
 
                         </div>
                     </div>
@@ -228,8 +236,28 @@
                 <div class="milestone-description">获得1.05×多维度提升，保留维度提升</div>
             </div>
             <div class="milestone">
-                <div class="milestone-goal">1500 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-goal">1,500 mm<sup>5</sup>重置次数</div>
                 <div class="milestone-description">在"主要"页面解锁5D维度维度</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">7,000 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">每秒获得100%将要获得的5维体积</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">250,000 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">每秒获得10XP</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">1e800000 mm<sup>4</sup></div>
+                <div class="milestone-description">解锁第三个战斗场填充进度条</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">1,000,000 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">移除第一个战斗场填充进度条的硬上限</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone-goal">1,500,000 mm<sup>5</sup>重置次数</div>
+                <div class="milestone-description">小朋友硬上限推迟^2</div>
             </div>
             <div v-if="player.PL2times.gte(10) && player.PL2total.gte(19200)">
                 <p class="text-center">你当前有{{format(getRealPL2resetTimes())}}可用mm<sup>5</sup>重置次数</p>
@@ -391,21 +419,155 @@
                 of 4D volumes gain, 4D volumes gain will be softcapped!(软上限限时回归!!!)
             </div>
         </div>
+        <div v-if="player.currentPage == 17" class="text-center">
+            <div v-if="hasTheorie(71)">
+                <p style="font-size: 300%">{5,5,1,2}小时后更新</p>
+                <p>Reactor produce speed: 0.0000 unit per second</p>
+                            <!-- <p :style="{color: getUndulatingColor(1)}">Remember to check Upgrades!</p> -->
+
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div :class="getReactorClass(1)" @click="toggleReactorState(1)">
+                                            0.0000 mm<sup>5.3</sup>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div :class="getReactorClass(2)" @click="toggleReactorState(2)">
+                                            0.0000 mm<sup>5.4</sup><br>
+                                            Need 5 mm<sup>5.3</sup>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div :class="getReactorClass(3)" @click="toggleReactorState(3)">
+                                            0.0000 mm<sup>5.5</sup><br>
+                                            Need 5 mm<sup>5.4</sup>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div :class="getReactorClass(4)" @click="toggleReactorState(4)">
+                                            0.0000 mm<sup>5.6</sup><br>
+                                            Need 5 mm<sup>5.5</sup>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div :class="getReactorClass(5)" @click="toggleReactorState(5)">
+                                            0.0000 mm<sup>5.7</sup><br>
+                                            Need 5 mm<sup>5.6</sup>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            </table>
+                            <h2>React upgrades</h2>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div class="rea" @click="buyReacUpg(1)">
+                                            ×3 mm<sup>5</sup> gain<br>
+                                            (0.0000/10)<br>
+                                            Need 0.0000 mm<sup>5.4</sup>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="rea" @click="buyReacUpg(2)">
+                                            ×1.8 reactor speed<br>
+                                            (0.0000/10)<br>
+                                            Need 0.0000 mm<sup>5.5</sup>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="rea" @click="buyReacUpg(3)">
+                                            ×2 reactor speed<br>
+                                            (0.0000/1)<br>
+                                            Need 0.0000 mm<sup>5.7</sup>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            </table>
+            </div>
+        </div>
+        <div v-if="player.currentPage == 16" class="text-center">
+            
+            <div v-if="player.volumesTotal.gte('1e100000')">
+                你有{{formatWhole(theorieTotal())}}研究点<br>
+                <button class="btn"        @click="getTheorieP(1)">从4维体积获得1研究点<br>需要: {{format(theorieNeed(1))}} mm<sup>4</sup></button>
+                <button class="btn mm3btn" @click="getTheorieP(2)">从3维体积获得1研究点<br>需要: {{format(theorieNeed(2))}} mm<sup>3</sup></button>
+                <button class="btn mm5btn" @click="getTheorieP(3)">从5维体积获得1研究点<br>需要: {{format(theorieNeed(3))}} mm<sup>5</sup></button>
+                <br>
+                <button class="btn" @click="getMaxTheorie()">获得最大研究点</button>
+                <br>
+                <button class="btn mm5btn" @click="refundTheorie()">返还下列研究，但进行一次无奖励的mm<sup>5</sup>重置</button><br>
+                <table>
+                    <tr>
+                        <td class="upgtow" :class="{unlocked: hasTheorie(11)}" @click="buyTheorie(11)">减少维度提升的价格底数<br>(7→3.205)<br>需要:4研究点</td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td class="upgtow" :class="{unlocked: hasTheorie(21)}" @click="buyTheorie(21)" v-if="hasTheorie(11)">维度提软上限弱化<br>(^0.5→^0.7)<br>需要:6研究点</td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td class="upgtow" :class="{unlocked: hasTheorie(31)}" @click="buyTheorie(31)" v-if="hasTheorie(21)">获得×1.5多的维度提升<br>需要:80研究点</td>
+                        <td class="upgtow" :class="{unlocked: hasTheorie(32)}" @click="buyTheorie(32)" v-if="hasTheorie(21)">增加5维维度维度能量的加成指数<br>(1200→1500)<br>需要:255研究点</td>
+                    </tr>
+                </table>
+                <p v-if="hasTheorie(31) && hasTheorie(32)">当你看到这段文字的时候，检查一下维度提升页面！</p>
+                <table>
+                    <tr>
+                        <td class="upgtow" :class="{unlocked: hasTheorie(41)}" @click="buyTheorie(41)" v-if="hasTheorie(31) && hasTheorie(32)">减少维度提升价格<br>(×(1.0000e10000)<sup>-1</sup>)<br>需要:30研究点</td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td class="upgtow" :class="{unlocked: hasTheorie(51)}" @click="buyTheorie(51)" v-if="hasTheorie(41)">维度提升^2价格公式变得更好<br>需要:40研究点</td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td class="upgtow" :class="{unlocked: hasTheorie(61)}" @click="buyTheorie(61)" v-if="hasTheorie(51)">1-8维度超级折算弱化<br>(^0.5→^0.6)<br>需要:60研究点</td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <td class="upgtow" :class="{unlocked: hasTheorie(71)}" @click="buyTheorie(71)" v-if="hasTheorie(61)">解锁反应堆<br>需要:560研究点</td>
+                    </tr>
+                </table>
+            </div>
+            <p v-else>到达1.000e1000000mm<sup>4</sup>4维体积以解锁升级塔</p>
+        </div>
         <div v-if="player.currentPage == 15" class="text-center">
-            <button class="btn" @click="buyall()" @touchstart="isHoldMax = true;" @touchend="isHoldMax = false;"
+            <button class="btn" @click="buymm5all()" @touchstart="isHoldMax = true;" @touchend="isHoldMax = false;"
                 v-on:mousedown="isHoldMax = true;" v-on:mouseup.native="isHoldMax = false;">
                 购买最大
             </button>
             <br>
-            <p style="font-size: 500%">5<sup>5<sup>5<sup>5</sup></sup></sup>小时后更新</p>
-            <p>此种类维度每次购买乘数: 1.2000</p>
+            
+            <p>你有<span
+                style="color:#00ffff; font-size: 40px;" v-html="format(player.PL2dimensionalEnergy)"></span>
+            5维维度维度能量</p>
+            <p>在<span
+                style="color:#00ffff; font-size: 40px;">^{{format(tmp.mm5.energyeffectExponent())}}</span>后给予<span style="color:#00ffff; font-size: 40px;">×{{format(tmp.mm5.energyTo4DDimensions())}}</span>
+                到4维维度</p>
+            <p>此种类维度每次购买乘数: {{format(tmp.mm5.getBoughtMultiplierafter8())}}</p>
             <div v-for="dim in dimensions" :key="dim.id" class="text-center">
                 {{ dimensionsLabel(dim.id+8) }}
-                +0.0000
-                x1.0000
-                ^1.0000
-                0.0000
-                <button class="btn" disabled>价格: 50,000,000 mm<sup>5</sup></button>
+                +<span>{{
+                    format(player.dimensions[DIMENSIONS_POINTS][+dim.id+7]) }}
+                </span>
+                x<span>{{
+                    format(player.dimensions[DIMENSIONS_MULTI][+dim.id+7]) }}
+                </span>
+                ^<span>{{
+                    format(player.dimensions[DIMENSIONS_EXPONENT][+dim.id+7]) }}
+                </span>
+                <span>{{
+                    format(player.dimensions[DIMENSIONS_BOUGHT][+dim.id+7]) }}
+                </span>
+                <button class="btn" @click="buymm5dim(+dim.id+8)" :disabled="!mm5dimbuyable(+dim.id+8)">价格: {{format(player.dimensions[DIMENSIONS_COST][+dim.id + 7])}} mm<sup>5</sup></button>
             </div>
             <!-- <div v-if="hasMM3Upg(20)" v-for="dimid in A9to16" class="text-center">
                 {{ dimensionsLabel(dimid) }} +0.0000 x0.0000 ^0.0000 0.0000
@@ -452,7 +614,7 @@
         </div>
         <div v-if="player.currentPage == 4" class="text-center">
             <div>
-                <p>维度提升({{format(player.dimBoost)}},{{format(getRealDimBoost())}})</p>
+                <p>维度提升({{format(player.dimBoost)}}→{{format(getRealDimBoost())}})</p>
                 <button class="btn" @click="dimBoost" v-html="dimBoostDescription()"></button><br>
                 <button class="btn" v-if="hasMM3Upg(3)" @click="toggleAutobuyer(9)">
                     自动: {{player.auto.includes(9) ? "开" :
@@ -467,6 +629,14 @@
                     自动: {{player.auto.includes(11) ? "开" :
                     "关"}}
                 </button>
+            </div>
+            <div v-if="player.isUnlockedDimBoost3">
+                <p>维度提升^3({{format(player.dimBoost3)}})</p>
+                <button class="btn" v-html="dimBoost3Description()" @click="dimBoost3">
+                    进行一次mm<sup>5</sup>重置，获得维度提升^3<br>
+                    需要: 200 维度提升^2
+                </button><br>
+                
             </div>
             <div v-html="statBoosts()"></div>
 

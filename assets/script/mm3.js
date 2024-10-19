@@ -35,9 +35,15 @@ function fixInfinity(){
     }
     player.PL1chal = [...(new Set(player.PL1chal))]
 }
-
+function reset4DDimensions(){
+    
+    for (let i = 0; i<8; i++){
+        player.dimensions[DIMENSIONS_POINTS][i] = PowiainaNum.ZERO.clone();
+        player.dimensions[DIMENSIONS_BOUGHT][i] = PowiainaNum.ZERO.clone();
+    }
+}
 function norewardMM3reset(){
-    resetDimensions();
+    reset4DDimensions()
     player.PL1Timespent = 0;
     player.dimBoostTimespent = 0;
     if (player.PL2times.lt(400)) player.dimBoost = E(hasMM3Upg(7) ? 35 : 

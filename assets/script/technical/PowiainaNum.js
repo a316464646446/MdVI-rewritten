@@ -1001,7 +1001,7 @@
 
     P.operatorE = function (i, value) {
 
-        if (typeof i != "number") i = Number(i);
+        if (i != "x" && typeof i != "number") i = Number(i);
         if (i != "x" && !isFinite(i)) throw Error(invalidArgument + "Index i out of range.");
 
         if (value === undefined) return this.getOperator(i, 1, 1);
@@ -1009,7 +1009,18 @@
 
     }
     //#endregion
-
+    //#region operator
+    P.getMaxFirstOperatorIndex = function(j=1,k=1) {
+        // returns [x,anything,j,k] that x is max.
+        for (let i = this.array.length-1; i >= 1; i--){
+            if (this.array[i][2] == j && this.array[i][3] == k){
+                return i;
+            }
+        }
+        // can not find this operator with [x,anything,j,k]
+        return -1
+    }
+    //#endregion
     //#region isFinite isInfinite isNaN
 
 

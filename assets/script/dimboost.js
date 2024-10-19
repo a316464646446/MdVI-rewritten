@@ -4,11 +4,11 @@ function dimBoost() {
             player.dimBoost = player.dimBoost.add(1)
         }else{
             player.dimBoost = E.max(player.dimBoost,
-                player.volumes.mul(tmp.dimensionBoost.requireDivision()).logarithm(7).sub(36).div(4).ceil() 
+                player.volumes.mul(tmp.dimensionBoost.requireDivision()).logarithm(hasTheorie(11) ? 3.205 : 7).sub(36).div(4).ceil() 
             )
         }
         if (!hasMM3Upg(9)){
-            resetDimensions();
+            reset4DDimensions()
             player.dimBoostTimespent = 0;
             if (player.dimBoost.gte(14)){
                 player.volumes = dimBoostReward[6].effect()
@@ -23,9 +23,10 @@ function getRealDimBoost(){
     if (player.PL1inchal==2){
         temp1 = temp1.mul(0.1)
     }
-    temp1 = softcap(temp1,5e4,0.5,"pow")
+    temp1 = softcap(temp1,5e4,hasTheorie(21) ? 0.7:0.5,"pow")
 
     if (player.PL2times.gte(400)) temp1 = temp1.mul(1.05)
+    if (hasTheorie(31)) temp1 = temp1.mul(1.5)
     return temp1
 }
 function getDimBoughts() {
@@ -169,6 +170,24 @@ function statBoosts() {
             a = ""
         }
     }
+    temp1 = temp1.concat("<br>")
+    let z = player.dimBoost3;
+    for (let i=0;i<dimBoostReward3.length;i++){
+        if (z.gte(dimBoostReward3[i].req)){
+            let a = "";
+            a = a.concat("<br>在")
+            a = a.concat(dimBoostReward3[i].req.format())
+            a = a.concat("维度提升^3, ")
+            a = a.concat(dimBoostReward3[i].desc)
+            if (dimBoostReward3[i].effectDisplay){
+                a = a.concat("  当前:");
+                a = a.concat(dimBoostReward3[i].effectDisplay);
+            }
+            temp1 = temp1.concat(a)
+            temp1 = temp1.concat("<br>")
+            a = ""
+        }
+    }
     return temp1;
 
 }
@@ -189,6 +208,23 @@ const dimBoostReward2 = [
         }
     }
 ]
+const dimBoostReward3 = [
+    {
+        req: E(1),
+        desc: "9维度可以生产8维度"
+    },
+    {
+        req: E(2),
+        desc: "每个维度提升^3使4维维度购买乘数+0.3",
+        effect(){
+            return player.dimBoost3.mul(0.3).max(0)
+        },
+        get effectDisplay(){
+            return "+"+format(this.effect())
+        }
+    }
+]
+
 function dimBoost2(){
     if (player.volumes.gte(tmp.dimensionBoost.require2())){
         
@@ -196,7 +232,7 @@ function dimBoost2(){
         if (player.PL2times.lt(90)){
             player.dimBoost2 = player.dimBoost2.add(1)
             player.dimBoostTimespent = 0;
-            resetDimensions();
+            reset4DDimensions()
             player.volumes = E(7)
             player.dimBoost = E(35)
         }else if (player.dimBoost2.lt(tmp.dimensionBoost.bulkDB2())){
@@ -210,7 +246,7 @@ function dimBoost2(){
 
 function dimBoost2Description(){
     let a =  `重置4维体积，1-8维度，和维度提升但进行一次维度提升<br>价格：${format(tmp.dimensionBoost.require2())} mm<sup>4</sup>`
-    let x = getRealDimBoost();
+    let x = player.dimBoost2;
     if (x.lt(dimBoostReward2[dimBoostReward2.length-1].req)){
         for (let i=0;i<dimBoostReward2.length;i++){
             if (x.lt(dimBoostReward2[i].req)){
@@ -227,4 +263,34 @@ function dimBoost2Description(){
         }
     }
     return a
+}
+function dimBoost3Description(){
+    let a =  `进行一次mm<sup>5</sup>重置，获得维度提升^3<br> 需要: ${format(tmp.dimensionBoost.require3())} 维度提升^2`
+    let x = player.dimBoost3;
+    if (x.lt(dimBoostReward3[dimBoostReward3.length-1].req)){
+        for (let i=0;i<dimBoostReward3.length;i++){
+            if (x.lt(dimBoostReward3[i].req)){
+                a = a.concat("<br>在")
+                a = a.concat(dimBoostReward3[i].req.format())
+                a = a.concat("维度提升^3, ")
+                a = a.concat(dimBoostReward3[i].desc)
+                if (dimBoostReward3[i].effectDisplay){
+                    a = a.concat("<br>当前:");
+                    a = a.concat(dimBoostReward3[i].effectDisplay);
+                }
+                return a;
+            }
+        }
+    }
+    return a
+}
+
+function dimBoost3(){
+    if (player.dimBoost2.gte(tmp.dimensionBoost.require3())){
+        player.dimBoost3 = player.dimBoost3.add(1)
+        player.dimBoostTimespent = 0;
+        doMM5reset();
+
+    }
+
 }
